@@ -125,15 +125,14 @@ class _FormWidgetState extends State<_FormWidget> {
     if (login == 'admin' && password == 'admin') {
       print('open next page');
       _showProblemWidget = Container();
-      setState(() {});
+      Navigator.pushReplacementNamed(context, '/main_screen');
     } else if (login == 'admin' && password != 'admin') {
       _showProblemWidget = const _ShowProblemWidget(problem: false);
-      setState(() {});
     } else {
       print('show error');
       _showProblemWidget = const _ShowProblemWidget(problem: true);
-      setState(() {});
     }
+    setState(() {});
   }
 
   void _resetPassword() {
