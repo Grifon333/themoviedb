@@ -29,7 +29,7 @@ class _AuthWidgetState extends State<AuthWidget> {
             onPressed: () => print('show search menu'),
             icon: const Icon(
               Icons.search,
-              color: AppColors.mainColor,
+              color: AppColors.lightBlue,
             ),
           ),
         ],
@@ -115,8 +115,8 @@ class _FormWidget extends StatefulWidget {
 }
 
 class _FormWidgetState extends State<_FormWidget> {
-  final _controllerUsername = TextEditingController();
-  final _controllerPassword = TextEditingController();
+  final _controllerUsername = TextEditingController(text: 'admin');
+  final _controllerPassword = TextEditingController(text: 'admin');
   Widget _showProblemWidget = Container();
 
   void _auth() {

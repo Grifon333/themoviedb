@@ -11,7 +11,7 @@ abstract class AppTextStyle {
     fontWeight: FontWeight.w600,
   );
   static const linkText = TextStyle(
-    color: AppColors.mainColor,
+    color: AppColors.lightBlue,
   );
   static const titleOfTextField = TextStyle(fontSize: 16);
   static const login = TextStyle(
@@ -20,7 +20,7 @@ abstract class AppTextStyle {
   );
   static const resetPassword = TextStyle(
     fontSize: 16,
-    color: AppColors.mainColor,
+    color: AppColors.lightBlue,
   );
   static const errorTitle = TextStyle(
     color: Colors.white,
