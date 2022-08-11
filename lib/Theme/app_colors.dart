@@ -8,4 +8,5 @@ abstract class AppColors {
   static const error = Color(0xFFD40242);
   static const selectedTab = Colors.white;
   static const unselectedTab = Colors.grey;
+  static const lightGrey = Color.fromRGBO(227, 227, 227, 1);
 }
