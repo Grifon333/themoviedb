@@ -4,12 +4,14 @@ import 'package:themoviedb/Theme/app_text_style.dart';
 import 'package:themoviedb/resources/resources.dart';
 
 class Movie {
+  final int id;
   final String imageName;
   final String title;
   final String date;
   final String description;
 
   Movie({
+    required this.id,
     required this.imageName,
     required this.title,
     required this.date,
@@ -27,6 +29,7 @@ class MovieListWidget extends StatefulWidget {
 class _MovieListWidgetState extends State<MovieListWidget> {
   final _movies = [
     Movie(
+      id: 1,
       imageName: AppImages.thorLoveAndThunder,
       title: 'Thor: Love and Thunder',
       date: 'July 6, 2022',
@@ -39,6 +42,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
           'too late.',
     ),
     Movie(
+      id: 2,
       imageName: AppImages.jurassicWorldDominion,
       title: 'Jurassic World Dominion',
       date: 'June 1, 2022',
@@ -49,6 +53,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
           'they now share with history’s most fearsome creatures.',
     ),
     Movie(
+      id: 3,
       imageName: AppImages.minionsTheRiseOfGru,
       title: 'Minions: The Rise of Gru',
       date: 'June 29, 2022',
@@ -57,6 +62,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
           'backup of his followers, the Minions.',
     ),
     Movie(
+      id: 4,
       imageName: AppImages.topGunMaverick,
       title: 'Top Gun: Maverick',
       date: 'May 24, 2022',
@@ -67,6 +73,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
           'of which no living pilot has ever seen.',
     ),
     Movie(
+      id: 5,
       imageName: AppImages.prey,
       title: 'Prey',
       date: 'August 2, 2022',
@@ -76,6 +83,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
           'with a technically advanced arsenal.',
     ),
     Movie(
+      id: 6,
       imageName: AppImages.theBlackPhone,
       title: 'The Black Phone',
       date: 'June 22, 2022',
@@ -87,6 +95,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
           'what happened to them doesn’t happen to Finney.',
     ),
     Movie(
+      id: 7,
       imageName: AppImages.lightyear,
       title: 'Lightyear',
       date: 'June 15, 2022',
@@ -95,6 +104,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
           'his robot companion Sox.',
     ),
     Movie(
+      id: 8,
       imageName: AppImages.doctorStrangeInTheMultiverseOfMadness,
       title: 'Doctor Strange in the Multiverse of Madness',
       date: 'May 4, 2022',
@@ -103,6 +113,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
           'realities of the Multiverse to confront a mysterious new adversary.',
     ),
     Movie(
+      id: 9,
       imageName: AppImages.theGrayMan,
       title: 'The Gray Man',
       date: 'July 13, 2022',
@@ -111,6 +122,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
           'realities of the Multiverse to confront a mysterious new adversary.',
     ),
     Movie(
+      id: 10,
       imageName: AppImages.purpleHearts,
       title: 'Purple Hearts',
       date: 'July 29, 2022',
@@ -119,6 +131,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
           'relationship all too real.',
     ),
     Movie(
+      id: 11,
       imageName: AppImages.thePrincess,
       title: 'The Princess',
       date: 'June 16, 2022',
@@ -129,6 +142,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
           'must protect her family and save the kingdom.',
     ),
     Movie(
+      id: 12,
       imageName: AppImages.dragonKnight,
       title: 'Dragoon Knight',
       date: 'March 21, 2022',
@@ -144,6 +158,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
           'it fight for them once more?',
     ),
     Movie(
+      id: 13,
       imageName: AppImages.theLedge,
       title: 'The ledge',
       date: 'February 18, 2022',
@@ -157,6 +172,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
           'feet away.',
     ),
     Movie(
+      id: 14,
       imageName: AppImages.spiderManNoWayHome,
       title: 'Spider-Man: No Way Home',
       date: 'December 15, 2021',
@@ -167,6 +183,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
           'forcing him to discover what it truly means to be Spider-Man.',
     ),
     Movie(
+      id: 15,
       imageName: AppImages.indemnity,
       title: 'Indemnity',
       date: 'February 11, 2022',
@@ -175,6 +192,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
           'rabbit hole of conspiracy to the highest degree.',
     ),
     Movie(
+      id: 16,
       imageName: AppImages.borrego,
       title: 'Borrego',
       date: 'January 14, 2022',
@@ -187,6 +205,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
           'botanist, all the while being pursued by a local drug receiver.',
     ),
     Movie(
+      id: 17,
       imageName: AppImages.lastSeenAlive,
       title: 'Last Seen Alive',
       date: 'May 19, 2022',
@@ -196,6 +215,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
           'own hands.',
     ),
     Movie(
+      id: 18,
       imageName: AppImages.sonicTheHedgehog2,
       title: 'Sonic the Hedgehog 2',
       date: 'March 30, 2022',
@@ -208,6 +228,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
           'wrong hands.',
     ),
     Movie(
+      id: 19,
       imageName: AppImages.jujustuKaisen0,
       title: 'Jujutsu Kaisen 0',
       date: 'December 24, 2021',
@@ -220,6 +241,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
           'time to confront the curse that haunts him?',
     ),
     Movie(
+      id: 20,
       imageName: AppImages.bulletTrain,
       title: 'Bullet Train',
       date: 'July 3, 2022',
@@ -253,6 +275,13 @@ class _MovieListWidgetState extends State<MovieListWidget> {
       _filteredMovies = _movies;
     }
     setState(() {});
+  }
+
+  void _viewMovieInfo(int index) {
+    Navigator.of(context).pushNamed(
+      '/main_screen/movie_details',
+      arguments: index,
+    );
   }
 
   @override
@@ -337,9 +366,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
                           borderRadius: const BorderRadius.all(
                             Radius.circular(7),
                           ),
-                          onTap: () {
-                            print('Tap on Card by name: ${movie.title}');
-                          },
+                          onTap: () => _viewMovieInfo(movie.id),
                         ),
                       ),
                     ],

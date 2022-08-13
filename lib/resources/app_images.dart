@@ -24,6 +24,8 @@ class AppImages {
   static const String theGrayMan = 'images/The Gray Man.jpg';
   static const String theLedge = 'images/The Ledge.jpg';
   static const String thePrincess = 'images/The Princess.jpg';
+  static const String thorLoveAndThunderBg =
+      'images/Thor Love_and_Thunder bg.png';
   static const String thorLoveAndThunder = 'images/Thor Love_and_Thunder.jpg';
   static const String topGunMaverick = 'images/Top Gun Maverick.jpg';
 }

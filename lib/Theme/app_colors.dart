@@ -13,4 +13,12 @@ abstract class AppColors {
   static const unselectedTab = Colors.grey;
 
   static const dataText = Color.fromRGBO(153, 153, 153, 1);
+
+  static final verticalDivider = Colors.white.withOpacity(0.3);
+  static const divider = Color.fromRGBO(0, 0, 0, 0.2);
+  static const facts = Color.fromRGBO(0, 0, 0, 0.1);
+  static const scoreBg = Color(0xFF081c22);
+  static const scoreGreat = Colors.green;
+  static const scoreGood = Colors.lime;
+  static const scoreBad = Colors.red;
 }

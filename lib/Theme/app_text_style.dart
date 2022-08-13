@@ -44,4 +44,44 @@ abstract class AppTextStyle {
     fontSize: 16,
     color: AppColors.lightBlue,
   );
+
+  // MovieInfo
+  static const titleMovie = TextStyle(
+    fontSize: 21,
+    fontWeight: FontWeight.w600,
+    color: Colors.white,
+  );
+  static const foundationYear = TextStyle(
+    fontSize: 17,
+    fontWeight: FontWeight.w400,
+    color: Colors.white70,
+  );
+  static const userScore = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w700,
+    color: Colors.white,
+  );
+  static const playTrailer = TextStyle(
+    fontSize: 16,
+    color: Colors.white,
+  );
+  static const facts = TextStyle(
+    fontSize: 16,
+    color: Colors.white,
+  );
+  static const overviewTitle = TextStyle(
+    fontSize: 21,
+    fontWeight: FontWeight.w600,
+    color: Colors.white,
+  );
+  static const overviewBody = TextStyle(
+    fontSize: 16,
+    color: Colors.white,
+  );
+  static const personCardName = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w700,
+    color: Colors.white,
+  );
+  static const personCardRole = TextStyle(color: Colors.white);
 }
