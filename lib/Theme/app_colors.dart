@@ -6,6 +6,8 @@ abstract class AppColors {
   static const lightGrey = Color.fromRGBO(227, 227, 227, 1);
   static const white = Colors.white;
 
+  static const thorLoveAndThunderBg = Color.fromRGBO(74, 53, 116, 1);
+
   static const enableBorder = Color.fromRGBO(206, 212, 218, 1);
   static const focusedBorder = Colors.blue;
   static const error = Color(0xFFD40242);

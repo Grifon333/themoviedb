@@ -9,27 +9,30 @@ class MovieDetailsMainInfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: const [
-        _TopPosterWidget(),
-        SizedBox(height: 16),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: _TitleWidget(),
-        ),
-        SizedBox(height: 16),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: _SecondHeaderWidget(),
-        ),
-        SizedBox(height: 16),
-        _FactsWidget(),
-        SizedBox(height: 20),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: _OverviewWidget(),
-        ),
-      ],
+    return ColoredBox(
+      color: AppColors.thorLoveAndThunderBg,
+      child: Column(
+        children: const [
+          _TopPosterWidget(),
+          SizedBox(height: 16),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: _TitleWidget(),
+          ),
+          SizedBox(height: 16),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: _SecondHeaderWidget(),
+          ),
+          SizedBox(height: 16),
+          _FactsWidget(),
+          SizedBox(height: 20),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: _OverviewWidget(),
+          ),
+        ],
+      ),
     );
   }
 }
