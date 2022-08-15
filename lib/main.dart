@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:themoviedb/Theme/app_colors.dart';
 import 'package:themoviedb/widgets/auth/auth_widget.dart';
+import 'package:themoviedb/widgets/auth/auth_widget_model.dart';
 import 'package:themoviedb/widgets/main_screen/main_screen_widget.dart';
 import 'package:themoviedb/widgets/movie_details/movie_details_widget.dart';
 
@@ -26,7 +27,10 @@ class MyApp extends StatelessWidget {
         ),
       ),
       routes: {
-        '/auth': (context) => const AuthWidget(),
+        '/': (context) => AuthWidgetProvider(
+              model: AuthWidgetModel(),
+              child: const AuthWidget(),
+            ),
         '/main_screen': (context) => const MainScreenWidget(),
         // '/main_screen/movie_details': (context) => const MovieDetailsWidget(),
       },
@@ -34,12 +38,14 @@ class MyApp extends StatelessWidget {
         switch (settings.name) {
           case '/main_screen/movie_details':
             final movieId = settings.arguments as int;
-            return MaterialPageRoute<Object>(builder: (context) => MovieDetailsWidget(movieId: movieId));
+            return MaterialPageRoute<Object>(
+                builder: (context) => MovieDetailsWidget(movieId: movieId));
           default:
-            return MaterialPageRoute<Object>(builder: (context) => const Text('error'));
+            return MaterialPageRoute<Object>(
+                builder: (context) => const Text('error'));
         }
       },
-      initialRoute: '/auth',
+      initialRoute: '/',
     );
   }
 }
