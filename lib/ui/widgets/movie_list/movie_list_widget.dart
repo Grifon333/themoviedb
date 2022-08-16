@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:themoviedb/Theme/app_colors.dart';
 import 'package:themoviedb/Theme/app_text_style.dart';
 import 'package:themoviedb/resources/resources.dart';
+import 'package:themoviedb/ui/navigation/main_navigation.dart';
 
 class Movie {
   final int id;
@@ -279,7 +280,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
 
   void _viewMovieInfo(int index) {
     Navigator.of(context).pushNamed(
-      '/main_screen/movie_details',
+      MainNavigationRouteNames.movieDetails,
       arguments: index,
     );
   }

@@ -10,6 +10,11 @@ class SessionDataProvider {
   Future<String?> getSessionId() async =>
       _secureStorage.read(key: _Keys.sessionId);
 
-  Future<void> setSessionId(String value) async =>
+  Future<void> setSessionId(String? value) async {
+    if (value != null) {
       _secureStorage.write(key: _Keys.sessionId, value: value);
+    } else {
+      _secureStorage.delete(key: _Keys.sessionId);
+    }
+  }
 }

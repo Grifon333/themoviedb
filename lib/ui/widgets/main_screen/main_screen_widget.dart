@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:themoviedb/widgets/movie_list/movie_list_widget.dart';
+import 'package:themoviedb/domain/data_providers/session_data_provider.dart';
+import 'package:themoviedb/ui/widgets/movie_list/movie_list_widget.dart';
 
 class MainScreenWidget extends StatefulWidget {
   const MainScreenWidget({Key? key}) : super(key: key);
@@ -24,6 +25,13 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
       appBar: AppBar(
         title: const Text('TMDB'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () => SessionDataProvider().setSessionId(null),
+            icon: const Icon(Icons.search),
+          ),
+          const Padding(padding: EdgeInsets.only(right: 10))
+        ],
       ),
       body: IndexedStack(
         index: _selectedTab,
