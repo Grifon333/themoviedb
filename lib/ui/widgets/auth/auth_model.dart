@@ -3,7 +3,7 @@ import 'package:themoviedb/domain/api_client/api_client.dart';
 import 'package:themoviedb/domain/data_providers/session_data_provider.dart';
 import 'package:themoviedb/ui/navigation/main_navigation.dart';
 
-class AuthWidgetModel extends ChangeNotifier {
+class AuthModel extends ChangeNotifier {
   final _apiClient = ApiClient();
   final _sessionDataProvider = SessionDataProvider();
   final controllerUsername = TextEditingController(text: 'jonfir');
@@ -55,30 +55,5 @@ class AuthWidgetModel extends ChangeNotifier {
 
     await _sessionDataProvider.setSessionId(sessionId);
     Navigator.of(context).pushReplacementNamed(MainNavigationRouteNames.mainScreen);
-  }
-}
-
-class AuthWidgetProvider extends InheritedNotifier {
-  final AuthWidgetModel model;
-
-  const AuthWidgetProvider({
-    Key? key,
-    required this.model,
-    required Widget child,
-  }) : super(
-    key: key,
-    notifier: model,
-    child: child,
-  );
-
-  static AuthWidgetProvider? watch(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<AuthWidgetProvider>();
-  }
-
-  static AuthWidgetProvider? read(BuildContext context) {
-    final widget = context
-        .getElementForInheritedWidgetOfExactType<AuthWidgetProvider>()
-        ?.widget;
-    return widget is AuthWidgetProvider ? widget : null;
   }
 }

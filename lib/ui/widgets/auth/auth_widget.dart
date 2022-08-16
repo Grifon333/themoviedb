@@ -1,8 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:themoviedb/Library/Widgets/Inherited/provider.dart';
 import 'package:themoviedb/Theme/app_colors.dart';
 import 'package:themoviedb/Theme/app_text_style.dart';
-import 'package:themoviedb/ui/widgets/auth/auth_widget_model.dart';
+import 'package:themoviedb/ui/widgets/auth/auth_model.dart';
 
 class AuthWidget extends StatefulWidget {
   const AuthWidget({Key? key}) : super(key: key);
@@ -112,7 +113,7 @@ class _FormWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = AuthWidgetProvider.read(context)?.model;
+    final model = NotifierProvider.read<AuthModel>(context);
     const decoration = InputDecoration(
       enabledBorder: OutlineInputBorder(
         borderSide: BorderSide(
@@ -179,7 +180,7 @@ class _AuthButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = AuthWidgetProvider.watch(context)?.model;
+    final model = NotifierProvider.watch<AuthModel>(context);
     final backgroundColor = model?.canStartAuth == true
         ? MaterialStateProperty.all(AppColors.lightBlue)
         : MaterialStateProperty.all(Colors.grey);
@@ -240,7 +241,7 @@ class _ShowErrorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final errorMessage = AuthWidgetProvider.watch(context)?.model.errorMessage;
+    final errorMessage = NotifierProvider.watch<AuthModel>(context)?.errorMessage;
     if (errorMessage == null) return const SizedBox.shrink();
 
     return Column(
