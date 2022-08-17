@@ -21,8 +21,6 @@ class AuthModel extends ChangeNotifier {
   // We couldn\'t find your username
 
   Future<void> auth(BuildContext context) async {
-    // jonfir
-    // P61{fSf?E{_u
     final username = controllerUsername.text;
     final password = controllerPassword.text;
     if (username.isEmpty || password.isEmpty) {
@@ -36,10 +34,20 @@ class AuthModel extends ChangeNotifier {
 
     String? sessionId;
     try {
-      sessionId = await _apiClient.auth(
-          username: username, password: password);
-    } catch (e) {
-      _errorMessage = 'Invalid';
+      sessionId = await _apiClient.auth(username: username, password: password);
+    } on ApiClientException catch (e) {
+      switch (e.type) {
+        case ApiClientExceptionType.Network:
+          _errorMessage =
+              'Server isn\'t available. Check your Internet connection';
+          break;
+        case ApiClientExceptionType.Auth:
+          _errorMessage = 'Enter the correct password and/or login';
+          break;
+        case ApiClientExceptionType.Other:
+          _errorMessage = 'There was an error. Try again';
+          break;
+      }
     }
     _isAuthProgress = false;
 
@@ -54,6 +62,7 @@ class AuthModel extends ChangeNotifier {
     }
 
     await _sessionDataProvider.setSessionId(sessionId);
-    Navigator.of(context).pushReplacementNamed(MainNavigationRouteNames.mainScreen);
+    Navigator.of(context)
+        .pushReplacementNamed(MainNavigationRouteNames.mainScreen);
   }
 }
