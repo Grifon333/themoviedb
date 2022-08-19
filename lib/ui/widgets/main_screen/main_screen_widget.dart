@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:themoviedb/Library/Widgets/Inherited/provider.dart';
 import 'package:themoviedb/domain/data_providers/session_data_provider.dart';
 import 'package:themoviedb/ui/widgets/main_screen/main_screen_model.dart';
+import 'package:themoviedb/ui/widgets/movie_list/movie_list_model.dart';
 import 'package:themoviedb/ui/widgets/movie_list/movie_list_widget.dart';
 
 class MainScreenWidget extends StatefulWidget {
@@ -13,6 +14,14 @@ class MainScreenWidget extends StatefulWidget {
 
 class _MainScreenWidgetState extends State<MainScreenWidget> {
   int _selectedTab = 0;
+  final movieListModel = MovieListModel();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    movieListModel.setupLocale(context);
+  }
 
   void onSelectedTab(int index) {
     if (_selectedTab == index) return;
@@ -42,7 +51,10 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
         index: _selectedTab,
         children: [
           const Text('News'),
-          MovieListWidget(),
+          NotifierProvider(
+            model: movieListModel,
+            child: const MovieListWidget(),
+          ),
           const Text('Serials'),
         ],
       ),
