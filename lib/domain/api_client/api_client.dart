@@ -190,6 +190,34 @@ class ApiClient {
     );
     return result;
   }
+
+  Future<PopularMovieResponse> searchMovie({
+    String language = 'en_US',
+    required String query,
+    int page = 1,
+    bool includeAdult = false,
+  }) async {
+    parser(dynamic json) {
+      final jsonMap = json as Map<String, dynamic>;
+      final response = PopularMovieResponse.fromJson(jsonMap);
+      return response;
+    }
+
+    final parameters = <String, dynamic>{
+      'api_key': _apiKey,
+      'language': language,
+      'query': query,
+      'page': page.toString(),
+      'include_adult': includeAdult.toString(),
+    };
+
+    final result = await _get(
+      '/search/movie',
+      parser,
+      parameters,
+    );
+    return result;
+  }
 }
 
 extension HttpClientResponseJsonDecode on HttpClientResponse {

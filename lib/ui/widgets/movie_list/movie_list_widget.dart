@@ -111,6 +111,7 @@ class MovieListWidget extends StatelessWidget {
               },
             ),
             TextField(
+              onChanged: model.searchMovies,
               decoration: InputDecoration(
                 labelText: 'Search',
                 filled: true,
