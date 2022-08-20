@@ -10,6 +10,9 @@ class MovieListModel extends ChangeNotifier {
   final _movies = <Movie>[];
   late DateFormat _dateFormat;
   String _locale = '';
+  late int _currentPage;
+  late int _totalPage;
+  var _isLoadingInProgres = false;
 
   List<Movie> get movies => List.unmodifiable(_movies);
 
@@ -19,14 +22,28 @@ class MovieListModel extends ChangeNotifier {
     _locale = locale;
     _dateFormat = DateFormat.yMMMMd(locale);
     _movies.clear();
+    _currentPage = 0;
+    _totalPage = 1;
     _loadMovies();
   }
 
   Future<void> _loadMovies() async {
-    final moviesResponse =
-        await _client.popularMovie(language: _locale); // page: 1, language: en-US
-    _movies.addAll(moviesResponse.movies);
-    notifyListeners();
+    if (_isLoadingInProgres || _currentPage >= _totalPage) return;
+    _isLoadingInProgres = true;
+    final nextPage = _currentPage + 1;
+    try {
+      final moviesResponse = await _client.popularMovie(
+        page: nextPage,
+        language: _locale,
+      );
+      _movies.addAll(moviesResponse.movies);
+      _currentPage = moviesResponse.page;
+      _totalPage = moviesResponse.totalPages;
+      _isLoadingInProgres = false;
+      notifyListeners();
+    } catch (e) {
+      _isLoadingInProgres = false;
+    }
   }
 
   void viewMovieInfo(BuildContext context, int index) {
@@ -38,4 +55,9 @@ class MovieListModel extends ChangeNotifier {
   }
 
   String stringFromData(DateTime date) => _dateFormat.format(date);
+
+  void showMovieAtIndex(int index) {
+    if (index < _movies.length - 1) return;
+    _loadMovies();
+  }
 }
