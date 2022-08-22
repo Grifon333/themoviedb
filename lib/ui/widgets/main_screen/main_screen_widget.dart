@@ -33,7 +33,6 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
   @override
   Widget build(BuildContext context) {
     final model = NotifierProvider.read<MainScreenModel>(context);
-    print(model);
 
     return Scaffold(
       appBar: AppBar(
@@ -52,7 +51,8 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
         children: [
           const Text('News'),
           NotifierProvider(
-            model: movieListModel,
+            create: () => movieListModel,
+            isManagingModel: false,
             child: const MovieListWidget(),
           ),
           const Text('Serials'),
