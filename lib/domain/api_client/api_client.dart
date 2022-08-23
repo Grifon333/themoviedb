@@ -243,6 +243,45 @@ class ApiClient {
     );
     return result;
   }
+
+  Future<String> certification(int movieId, String iso) async {
+    parser(dynamic json) {
+      final jsonMap = json as Map<String, dynamic>;
+      // final results = jsonMap['results'] as Map<String, dynamic>;
+      // final results = jsonMap['results'] as List<Map<String, dynamic>>;
+      final results = jsonMap['results'] as List<dynamic>;
+      var certification = '';
+
+      // results.forEach((key, dynamic value) {
+      //   if (results['iso_3166_1'] == iso) {
+      //     final releaseDates = results['release_dates'] as Map<String, dynamic>;
+      //     certification = releaseDates['certification'] as String;
+      //   }
+      // });
+      for (var element in results) {
+        if (element['iso_3166_1'] == iso) {
+          // final releaseDates = results['release_dates'] as Map<String, dynamic>;
+          // certification = element['certification'] as String;
+          final releaseDate = element['release_dates'] as List<dynamic>;
+          certification = releaseDate.first['certification'] as String;
+          break;
+        }
+      }
+
+      return certification;
+    }
+
+    final parameters = {
+      'api_key': _apiKey,
+    };
+
+    final result = _get(
+      '/movie/$movieId/release_dates',
+      parser,
+      parameters,
+    );
+    return result;
+  }
 }
 
 extension HttpClientResponseJsonDecode on HttpClientResponse {

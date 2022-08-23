@@ -4,11 +4,13 @@ import 'dart:math' show pi;
 import 'package:themoviedb/Theme/app_colors.dart';
 
 class RadialPercentWidget extends StatelessWidget {
-  final int score;
+  final double score;
+  final Widget child;
 
   const RadialPercentWidget({
     Key? key,
     required this.score,
+    required this.child,
   }) : super(key: key);
 
   @override
@@ -17,12 +19,9 @@ class RadialPercentWidget extends StatelessWidget {
       width: 50,
       height: 50,
       child: CustomPaint(
-        painter: _Painter(score: score / 100),
+        painter: _Painter(score: score),
         child: Center(
-          child: Text(
-            '$score %',
-            style: const TextStyle(color: Colors.white),
-          ),
+          child: child,
         ),
       ),
     );

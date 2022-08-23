@@ -14,7 +14,6 @@ class MovieDetailsWidget extends StatefulWidget {
 }
 
 class _MovieDetailsWidgetState extends State<MovieDetailsWidget> {
-
   @override
   void didChangeDependencies() {
     NotifierProvider.read<MovieDetailsModel>(context)?.setupLocale(context);
@@ -28,12 +27,7 @@ class _MovieDetailsWidgetState extends State<MovieDetailsWidget> {
         title: const _TitleWidget(),
         centerTitle: true,
       ),
-      body: ListView(
-        children: const [
-          MovieDetailsMainInfoWidget(),
-          MovieDetailsScreenCastWidget(),
-        ],
-      ),
+      body: const _BodyWidget(),
     );
   }
 }
@@ -45,5 +39,26 @@ class _TitleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = NotifierProvider.watch<MovieDetailsModel>(context);
     return Text(model?.movieDetails?.title ?? 'Loading...');
+  }
+}
+
+class _BodyWidget extends StatelessWidget {
+  const _BodyWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final model = NotifierProvider.watch<MovieDetailsModel>(context);
+    if (model?.movieDetails == null) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
+    return ListView(
+      children: const [
+        MovieDetailsMainInfoWidget(),
+        MovieDetailsScreenCastWidget(),
+      ],
+    );
   }
 }

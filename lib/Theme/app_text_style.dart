@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:themoviedb/Theme/app_colors.dart';
 
 abstract class AppTextStyle {
-
   static const mainText = TextStyle(
     fontSize: 16,
     color: Colors.black,
@@ -69,6 +68,17 @@ abstract class AppTextStyle {
     fontSize: 16,
     color: Colors.white,
   );
+  static final certification = TextStyle(
+    fontSize: 16,
+    color: Colors.white.withOpacity(0.6),
+    fontWeight: FontWeight.w600,
+    background: Paint()
+      ..color = Colors.grey
+      ..strokeWidth = 2
+      ..style = PaintingStyle.stroke,
+  );
+
+  // final paint = Paint()..color = Colors.grey;
   static const overviewTitle = TextStyle(
     fontSize: 21,
     fontWeight: FontWeight.w600,
@@ -84,4 +94,9 @@ abstract class AppTextStyle {
     color: Colors.white,
   );
   static const personCardRole = TextStyle(color: Colors.white);
+  static const score = TextStyle(
+    color: Colors.white,
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+  );
 }

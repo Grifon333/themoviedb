@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:themoviedb/Library/Widgets/Inherited/provider.dart';
 import 'package:themoviedb/Theme/app_colors.dart';
 import 'package:themoviedb/Theme/app_text_style.dart';
-import 'package:themoviedb/resources/resources.dart';
+import 'package:themoviedb/domain/api_client/api_client.dart';
 import 'package:themoviedb/ui/widgets/elements/radial_percent_widget.dart';
+import 'package:themoviedb/ui/widgets/movie_details/movie_details_model.dart';
 
 class MovieDetailsMainInfoWidget extends StatelessWidget {
   const MovieDetailsMainInfoWidget({Key? key}) : super(key: key);
@@ -42,24 +44,35 @@ class _TopPosterWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: const [
-        Image(
-          image: AssetImage(AppImages.thorLoveAndThunderBg),
-          fit: BoxFit.fitWidth,
-        ),
-        Positioned(
-          top: 20,
-          bottom: 20,
-          left: 20,
-          child: ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(6)),
-            child: Image(
-              image: AssetImage(AppImages.thorLoveAndThunder),
+    final model = NotifierProvider.watch<MovieDetailsModel>(context);
+    final backdropPath = model?.movieDetails?.backdropPath;
+    final posterPath = model?.movieDetails?.posterPath;
+
+    return AspectRatio(
+      aspectRatio: 392.7 / 220.7,
+      child: Stack(
+        children: [
+          backdropPath != null
+              ? Image.network(
+                  ApiClient.makeImage(backdropPath),
+                  fit: BoxFit.fitWidth,
+                )
+              : const SizedBox.shrink(),
+          Positioned(
+            top: 20,
+            bottom: 20,
+            left: 20,
+            child: ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(6)),
+              child: posterPath != null
+                  ? Image.network(
+                      ApiClient.makeImage(posterPath),
+                    )
+                  : const SizedBox.shrink(),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -69,15 +82,22 @@ class _TitleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = NotifierProvider.watch<MovieDetailsModel>(context);
+    var year = model?.movieDetails?.releaseDate.year.toString();
+    if (year != null) {
+      year = ' ($year)';
+    }
+
     return RichText(
-      text: const TextSpan(
+      textAlign: TextAlign.center,
+      text: TextSpan(
         children: [
           TextSpan(
-            text: 'Thor: Love and Thunder ',
+            text: model?.movieDetails?.title,
             style: AppTextStyle.titleMovie,
           ),
           TextSpan(
-            text: '(2022)',
+            text: year,
             style: AppTextStyle.foundationYear,
           ),
         ],
@@ -91,14 +111,23 @@ class _SecondHeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = NotifierProvider.watch<MovieDetailsModel>(context);
+    final scale = model?.movieDetails?.voteAverage ?? 0;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Row(
-          children: const [
-            RadialPercentWidget(score: 68),
-            SizedBox(width: 10),
-            Text(
+          children: [
+            RadialPercentWidget(
+              score: scale / 10,
+              child: Text(
+                (scale * 10).toStringAsFixed(0),
+                style: AppTextStyle.score,
+              ),
+            ),
+            const SizedBox(width: 10),
+            const Text(
               'User Score',
               style: AppTextStyle.userScore,
             ),
@@ -109,9 +138,24 @@ class _SecondHeaderWidget extends StatelessWidget {
           height: 24,
           color: AppColors.verticalDivider,
         ),
-        const Text(
-          'Play Trailer',
-          style: AppTextStyle.playTrailer,
+        TextButton(
+          style: ButtonStyle(
+            padding: MaterialStateProperty.all(EdgeInsets.all(0)),
+          ),
+          onPressed: () {},
+          child: Row(
+            children: const [
+              Icon(
+                Icons.play_arrow,
+                color: Colors.white,
+              ),
+              SizedBox(width: 6),
+              Text(
+                'Play Trailer',
+                style: AppTextStyle.playTrailer,
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -123,6 +167,28 @@ class _FactsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = NotifierProvider.watch<MovieDetailsModel>(context);
+    final releaseDate = model?.movieDetails?.releaseDate;
+    final certification = model?.certification ?? '';
+    String date = '';
+    if (releaseDate != null) {
+      date = model?.stringFromDate(releaseDate) ?? ' ';
+    }
+    final productionCountry =
+        model?.movieDetails?.productionCountries[0].iso ?? '';
+    final runtime = model?.movieDetails?.runtime ?? 0;
+    var hours = (runtime ~/ 60).toString();
+    if (hours != '0') {
+      hours = '$hours h';
+    }
+    final minutes = '${(runtime % 60).toStringAsFixed(0)} m';
+    final time = '$hours $minutes';
+    final genres = model?.movieDetails?.genres
+            .map<String>((e) => e.name)
+            .toList()
+            .join(', ') ??
+        '';
+
     const divider = Divider(
       height: 0,
       thickness: 1,
@@ -134,14 +200,31 @@ class _FactsWidget extends StatelessWidget {
         divider,
         ConstrainedBox(
           constraints: const BoxConstraints(minWidth: double.infinity),
-          child: const ColoredBox(
+          child: ColoredBox(
             color: AppColors.facts,
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 10),
-              child: Text(
-                'PG-13  07/08/2022 (US) • 1h 59m \nAction, Adventure, Fantasy',
-                style: AppTextStyle.facts,
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              // child: Text(
+              //   '$certification $date ($productionCountry) • $time \n$genres',
+              //   style: AppTextStyle.facts,
+              //   textAlign: TextAlign.center,
+              // ),
+              child: RichText(
                 textAlign: TextAlign.center,
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: ' $certification ',
+                      style: certification != ''
+                          ? AppTextStyle.certification
+                          : AppTextStyle.facts,
+                    ),
+                    TextSpan(
+                      text: '  $date ($productionCountry) • $time \n$genres',
+                      style: AppTextStyle.facts,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -157,28 +240,25 @@ class _OverviewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = NotifierProvider.watch<MovieDetailsModel>(context);
+    final overview = model?.movieDetails?.overview ?? '';
+
     return ConstrainedBox(
       constraints: const BoxConstraints(minWidth: double.infinity),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Text(
+        children: [
+          const Text(
             'Overview',
             style: AppTextStyle.overviewTitle,
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
-            'After his retirement is interrupted by Gorr the God Butcher, a '
-            'galactic killer who seeks the extinction of the gods, Thor '
-            'enlists the help of King Valkyrie, Korg, and ex-girlfriend '
-            'Jane Foster, who now inexplicably wields Mjolnir as the Mighty '
-            'Thor. Together they embark upon a harrowing cosmic adventure '
-            'to uncover the mystery of the God Butcher’s vengeance and stop '
-            'him before it’s too late.',
+            overview,
             style: AppTextStyle.overviewBody,
           ),
-          SizedBox(height: 30),
-          _PeopleWidget(),
+          const SizedBox(height: 30),
+          const _PeopleWidget(),
         ],
       ),
     );

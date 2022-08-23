@@ -9,23 +9,33 @@ class MovieDetailsModel extends ChangeNotifier {
 
   int movieId;
   MovieDetails? _movieDetails;
+  String _certification = '';
   String _locale = '';
+  String _countryCode = '';
   late DateFormat _dateFormat;
 
   MovieDetails? get movieDetails => _movieDetails;
+  String get certification => _certification;
 
   MovieDetailsModel({required this.movieId,});
 
   Future<void> setupLocale(BuildContext context) async {
     final locale = Localizations.localeOf(context).toLanguageTag();
-    if (locale == _locale) return;
+    final countryCode = Localizations.localeOf(context).countryCode ?? 'US';
+    if (locale == _locale || countryCode == _countryCode) return;
     _locale = locale;
-    _dateFormat = DateFormat.yMMMMd(locale);
+    _countryCode = countryCode;
+    // _dateFormat = DateFormat.yMMMMd(locale);
+    // _dateFormat = DateFormat.yMd(locale);
+    _dateFormat = DateFormat.yMd(locale);
     await _loadDetails();
   }
 
   Future<void> _loadDetails() async {
     _movieDetails = await _apiClient.movieDetails(_locale, movieId);
+    _certification = await _apiClient.certification(movieId, _countryCode);
     notifyListeners();
   }
+
+  String stringFromDate(DateTime date) => _dateFormat.format(date);
 }
