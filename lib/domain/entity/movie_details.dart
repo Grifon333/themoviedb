@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:themoviedb/domain/entity/movie_details_credits.dart';
 
 part 'movie_details.g.dart';
 
@@ -29,6 +30,7 @@ class MovieDetails {
   bool video;
   double voteAverage;
   int voteCount;
+  MovieDetailsCredits credits;
 
   MovieDetails({
     required this.adult,
@@ -56,6 +58,7 @@ class MovieDetails {
     required this.video,
     required this.voteAverage,
     required this.voteCount,
+    required this.credits,
   });
 
   Map<String, dynamic> toJson() => _$MovieDetailsToJson(this);

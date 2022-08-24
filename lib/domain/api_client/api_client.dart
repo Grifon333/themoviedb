@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:themoviedb/domain/entity/popular_movie_response.dart';
 import 'package:themoviedb/domain/entity/movie_details.dart';
 
-enum ApiClientExceptionType { Network, Auth, Other }
+enum ApiClientExceptionType { network, auth, other }
 
 class ApiClientException implements Exception {
   final ApiClientExceptionType type;
@@ -65,11 +65,11 @@ class ApiClient {
       final result = parser(json);
       return result;
     } on SocketException {
-      throw ApiClientException(ApiClientExceptionType.Network);
+      throw ApiClientException(ApiClientExceptionType.network);
     } on ApiClientException {
       rethrow;
     } catch (_) {
-      throw ApiClientException(ApiClientExceptionType.Other);
+      throw ApiClientException(ApiClientExceptionType.other);
     }
   }
 
@@ -90,11 +90,11 @@ class ApiClient {
       final result = parser(json);
       return result;
     } on SocketException {
-      throw ApiClientException(ApiClientExceptionType.Network);
+      throw ApiClientException(ApiClientExceptionType.network);
     } on ApiClientException {
       rethrow;
     } catch (_) {
-      throw ApiClientException(ApiClientExceptionType.Other);
+      throw ApiClientException(ApiClientExceptionType.other);
     }
   }
 
@@ -162,9 +162,9 @@ class ApiClient {
       final dynamic status = json['status_code'];
       final code = status is int ? status : 0;
       if (code == 30) {
-        throw ApiClientException(ApiClientExceptionType.Auth);
+        throw ApiClientException(ApiClientExceptionType.auth);
       } else {
-        throw ApiClientException(ApiClientExceptionType.Other);
+        throw ApiClientException(ApiClientExceptionType.other);
       }
     }
   }
@@ -234,6 +234,7 @@ class ApiClient {
     final parameters = {
       'api_key': _apiKey,
       'language': language,
+      'append_to_response': 'credits',
     };
 
     final result = _get(
@@ -247,27 +248,15 @@ class ApiClient {
   Future<String> certification(int movieId, String iso) async {
     parser(dynamic json) {
       final jsonMap = json as Map<String, dynamic>;
-      // final results = jsonMap['results'] as Map<String, dynamic>;
-      // final results = jsonMap['results'] as List<Map<String, dynamic>>;
       final results = jsonMap['results'] as List<dynamic>;
       var certification = '';
-
-      // results.forEach((key, dynamic value) {
-      //   if (results['iso_3166_1'] == iso) {
-      //     final releaseDates = results['release_dates'] as Map<String, dynamic>;
-      //     certification = releaseDates['certification'] as String;
-      //   }
-      // });
       for (var element in results) {
         if (element['iso_3166_1'] == iso) {
-          // final releaseDates = results['release_dates'] as Map<String, dynamic>;
-          // certification = element['certification'] as String;
           final releaseDate = element['release_dates'] as List<dynamic>;
           certification = releaseDate.first['certification'] as String;
           break;
         }
       }
-
       return certification;
     }
 

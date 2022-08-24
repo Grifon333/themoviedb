@@ -1,58 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:themoviedb/Library/Widgets/Inherited/provider.dart';
 import 'package:themoviedb/Theme/app_colors.dart';
+import 'package:themoviedb/domain/api_client/api_client.dart';
 import 'package:themoviedb/resources/resources.dart';
+import 'package:themoviedb/ui/widgets/movie_details/movie_details_model.dart';
 
-class MovieDetailsScreenCastWidget extends StatefulWidget {
+class MovieDetailsScreenCastWidget extends StatelessWidget {
   const MovieDetailsScreenCastWidget({Key? key}) : super(key: key);
 
   @override
-  State<MovieDetailsScreenCastWidget> createState() =>
-      _MovieDetailsScreenCastWidgetState();
-}
-
-class _MovieDetailsScreenCastWidgetState
-    extends State<MovieDetailsScreenCastWidget> {
-  final List<_PersonInfo> _people = [
-    _PersonInfo(
-        image: AppImages.chrisHemsworth,
-        name: 'Chris Hemsworth',
-        role: 'Thor Odinson'),
-    _PersonInfo(
-        image: AppImages.christianBale,
-        name: 'Christian Bale',
-        role: 'Gorr'),
-    _PersonInfo(
-        image: AppImages.tessaThompson,
-        name: 'Tessa Thompson',
-        role: 'King Valkyrie'),
-    _PersonInfo(
-        image: AppImages.taikaWaititi,
-        name: 'Taika Waititi',
-        role: 'Korg / Old Kronan God (voice)'),
-    _PersonInfo(
-        image: AppImages.nataliePortman,
-        name: 'Natalie Portman',
-        role: 'Jane Foster / The Mighty Thor'),
-    _PersonInfo(
-        image: AppImages.jaimieAlexander,
-        name: 'Jaimie Alexander',
-        role: 'Sif'),
-    _PersonInfo(
-        image: AppImages.russellCrowe,
-        name: 'Russell Crowe',
-        role: 'Zeus'),
-    _PersonInfo(
-        image: AppImages.chrisPratt,
-        name: 'Chris Pratt',
-        role: 'Peter Quill / Star-Lord'),
-    _PersonInfo(
-        image: AppImages.karenGillan,
-        name: 'Karen Gillan',
-        role: 'Nebula'),
-  ];
-
-  @override
   Widget build(BuildContext context) {
+    final model = NotifierProvider.watch<MovieDetailsModel>(context);
+    final cast = model?.movieDetails?.credits.cast.getRange(0, 9);
+    if (cast == null) return const SizedBox.shrink();
+    List<_PersonInfo> people = [];
+    people = cast.map((e) {
+      final profilePath = e.profilePath != null
+          ? Image.network(
+              ApiClient.makeImage(e.profilePath ?? ''),
+              width: 120,
+              height: 133,
+              fit: BoxFit.fitWidth,
+              alignment: Alignment.center,
+            )
+          : const Image(
+              image: AssetImage(AppImages.userGrey),
+              height: 133,
+              width: 120,
+            );
+      return _PersonInfo(
+        image: profilePath,
+        name: e.name,
+        role: e.character,
+      );
+    }).toList();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -70,15 +52,19 @@ class _MovieDetailsScreenCastWidgetState
         SizedBox(
           height: 260,
           child: Scrollbar(
+            thickness: 7,
+            radius: const Radius.circular(4),
+            thumbVisibility: true,
             child: ListView.builder(
               padding: const EdgeInsets.only(left: 14),
-              itemCount: _people.length,
+              itemCount: people.length,
               itemExtent: 134,
               scrollDirection: Axis.horizontal,
               itemBuilder: (BuildContext context, int index) {
                 return Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 4, top: 10, bottom: 10),
-                  child: _PersonCardWidget(person: _people[index]),
+                  padding: const EdgeInsets.only(
+                      left: 10, right: 4, top: 10, bottom: 10),
+                  child: _PersonCardWidget(person: people[index]),
                 );
               },
             ),
@@ -102,19 +88,16 @@ class _PersonCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(6)),
-        color: Colors.white,
-        border: Border.all(
-          color: AppColors.lightGrey
-        )
-      ),
+          borderRadius: const BorderRadius.all(Radius.circular(6)),
+          color: Colors.white,
+          border: Border.all(color: AppColors.lightGrey)),
       child: ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(6)),
+        borderRadius: const BorderRadius.all(Radius.circular(6)),
         child: Column(
           children: [
-            Image(image: AssetImage(person.image)),
+            person.image,
             Padding(
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -137,7 +120,7 @@ class _PersonCardWidget extends StatelessWidget {
 }
 
 class _PersonInfo {
-  final String image;
+  final Image image;
   final String name;
   final String role;
 

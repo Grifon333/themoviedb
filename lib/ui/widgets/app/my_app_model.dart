@@ -6,7 +6,7 @@ class MyAppModel {
   bool get isAuth => _isAuth;
 
   Future<void> checkAuth() async {
-    final _sessionId = await _sessionDataProvider.getSessionId();
-    _isAuth = _sessionId != null;
+    final sessionId = await _sessionDataProvider.getSessionId();
+    _isAuth = sessionId != null;
   }
 }

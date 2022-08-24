@@ -37,4 +37,5 @@ class AppImages {
       'images/Thor Love_and_Thunder bg.png';
   static const String thorLoveAndThunder = 'images/Thor Love_and_Thunder.jpg';
   static const String topGunMaverick = 'images/Top Gun Maverick.jpg';
+  static const String userGrey = 'images/user_grey.png';
 }

@@ -3,6 +3,7 @@ import 'package:themoviedb/Library/Widgets/Inherited/provider.dart';
 import 'package:themoviedb/Theme/app_colors.dart';
 import 'package:themoviedb/Theme/app_text_style.dart';
 import 'package:themoviedb/domain/api_client/api_client.dart';
+import 'package:themoviedb/domain/entity/movie_details_credits.dart';
 import 'package:themoviedb/ui/widgets/elements/radial_percent_widget.dart';
 import 'package:themoviedb/ui/widgets/movie_details/movie_details_model.dart';
 
@@ -27,11 +28,15 @@ class MovieDetailsMainInfoWidget extends StatelessWidget {
             child: _SecondHeaderWidget(),
           ),
           SizedBox(height: 16),
-          _FactsWidget(),
+          _GenreWrapperWidget(),
           SizedBox(height: 20),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: _OverviewWidget(),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: _PeopleWidget(),
           ),
         ],
       ),
@@ -140,7 +145,7 @@ class _SecondHeaderWidget extends StatelessWidget {
         ),
         TextButton(
           style: ButtonStyle(
-            padding: MaterialStateProperty.all(EdgeInsets.all(0)),
+            padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
           ),
           onPressed: () {},
           child: Row(
@@ -162,8 +167,8 @@ class _SecondHeaderWidget extends StatelessWidget {
   }
 }
 
-class _FactsWidget extends StatelessWidget {
-  const _FactsWidget({Key? key}) : super(key: key);
+class _GenreWrapperWidget extends StatelessWidget {
+  const _GenreWrapperWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -204,11 +209,6 @@ class _FactsWidget extends StatelessWidget {
             color: AppColors.facts,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
-              // child: Text(
-              //   '$certification $date ($productionCountry) • $time \n$genres',
-              //   style: AppTextStyle.facts,
-              //   textAlign: TextAlign.center,
-              // ),
               child: RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
@@ -235,6 +235,28 @@ class _FactsWidget extends StatelessWidget {
   }
 }
 
+class _TagLineWidget extends StatelessWidget {
+  const _TagLineWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final model = NotifierProvider.watch<MovieDetailsModel>(context);
+    final tagLine = model?.movieDetails?.tagline;
+    if (tagLine == null) {
+      return const SizedBox.shrink();
+    }
+
+    return Text(
+      tagLine,
+      style: TextStyle(
+        fontSize: 17,
+        fontStyle: FontStyle.italic,
+        color: Colors.white.withOpacity(0.6),
+      ),
+    );
+  }
+}
+
 class _OverviewWidget extends StatelessWidget {
   const _OverviewWidget({Key? key}) : super(key: key);
 
@@ -243,24 +265,22 @@ class _OverviewWidget extends StatelessWidget {
     final model = NotifierProvider.watch<MovieDetailsModel>(context);
     final overview = model?.movieDetails?.overview ?? '';
 
-    return ConstrainedBox(
-      constraints: const BoxConstraints(minWidth: double.infinity),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Overview',
-            style: AppTextStyle.overviewTitle,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            overview,
-            style: AppTextStyle.overviewBody,
-          ),
-          const SizedBox(height: 30),
-          const _PeopleWidget(),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const _TagLineWidget(),
+        const SizedBox(height: 10),
+        const Text(
+          'Overview',
+          style: AppTextStyle.overviewTitle,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          overview,
+          style: AppTextStyle.overviewBody,
+        ),
+        const SizedBox(height: 30),
+      ],
     );
   }
 }
@@ -270,74 +290,69 @@ class _PeopleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = NotifierProvider.watch<MovieDetailsModel>(context);
+    final crew = model?.movieDetails?.credits.crew;
+    if (crew == null || crew.isEmpty) return const SizedBox.shrink();
+    List<_RowOfPersonCardWidget> listCrew = _getListCrew(crew);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: const [
-            Expanded(
-                child: _PersonCardWidget(
-                    name: 'Taika Waititi', role: 'Director, Writer')),
-            Expanded(
-                child:
-                    _PersonCardWidget(name: 'Jim Starlin', role: 'Characters')),
-          ],
-        ),
-        const SizedBox(height: 20),
-        Row(
-          children: const [
-            Expanded(
-                child: _PersonCardWidget(
-                    name: 'Streve Englehart', role: 'Characters')),
-            Expanded(
-                child:
-                    _PersonCardWidget(name: 'Bill Mantlo', role: 'Characters')),
-          ],
-        ),
-        const SizedBox(height: 20),
-        Row(
-          children: const [
-            Expanded(
-                child:
-                    _PersonCardWidget(name: 'Steve Gan', role: 'Characters')),
-            Expanded(
-                child: _PersonCardWidget(
-                    name: 'Larry Lieber', role: 'Characters')),
-          ],
-        ),
-        const SizedBox(height: 20),
-        Row(
-          children: const [
-            Expanded(
-                child: _PersonCardWidget(name: 'Stan Lee', role: 'Characters')),
-            Expanded(
-                child: _PersonCardWidget(name: 'Don Heck', role: 'Characters')),
-          ],
-        ),
-        const SizedBox(height: 20),
-        Row(
-          children: const [
-            Expanded(
-                child:
-                    _PersonCardWidget(name: 'Jack Kirby', role: 'Characters')),
-            Expanded(
-                child: _PersonCardWidget(
-                    name: 'Keith Giffen', role: 'Characters')),
-          ],
-        ),
-        const SizedBox(height: 20),
-        Row(
-          children: const [
-            Expanded(
-                child: _PersonCardWidget(
-                    name: 'Jennifer Kaytin Robinson', role: 'Writer')),
-            Expanded(child: _PersonCardWidget(name: '', role: '')),
-          ],
-        ),
-        const SizedBox(height: 20),
-      ],
+      children: listCrew,
     );
+  }
+
+  List<_RowOfPersonCardWidget> _getListCrew(List<Crew> crew) {
+    List<_PersonCardWidget> list = _getMainCrew(crew);
+
+    var rowCards = <_RowOfPersonCardWidget>[];
+    int chunkSize = 2;
+    for (int i = 0; i < list.length; i += chunkSize) {
+      rowCards.add(_RowOfPersonCardWidget(
+          list: list.sublist(
+              i, i + chunkSize > list.length ? list.length : i + chunkSize)));
+    }
+    return rowCards;
+  }
+
+  List<_PersonCardWidget> _getMainCrew(List<Crew> crew) {
+    Map<int, _PersonCardWidget> mapMainCrew = {};
+    for (var element in crew) {
+      final job = element.job;
+      if (!(job == 'Author' ||
+          job == 'Characters' ||
+          job == 'Director' ||
+          job == 'Novel' ||
+          job == 'Screenplay' ||
+          job == 'Story' ||
+          job == 'Teleplay' ||
+          job == 'Writer')) {
+        continue;
+      }
+
+      if (mapMainCrew.containsKey(element.id)) {
+        mapMainCrew.update(
+            element.id,
+            (value) => _PersonCardWidget(
+                name: value.name, role: '${value.role}, ${element.job}'));
+      } else {
+        mapMainCrew[element.id] =
+            _PersonCardWidget(name: element.name, role: element.job);
+      }
+    }
+
+    var list = mapMainCrew.values.toList();
+    list.sort((a, b) {
+      var compare = a.role.compareTo(b.role);
+      if (compare == 0) {
+        compare = a.name.compareTo(b.name);
+      }
+      return compare;
+    });
+    if (list.length % 2 == 1) {
+      list.add(const _PersonCardWidget(name: '', role: ''));
+    }
+
+    return list;
   }
 }
 
@@ -353,18 +368,39 @@ class _PersonCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          name,
-          style: AppTextStyle.personCardName,
-        ),
-        Text(
-          role,
-          style: AppTextStyle.personCardRole,
-        )
-      ],
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            name,
+            style: AppTextStyle.personCardName,
+          ),
+          Text(
+            role,
+            style: AppTextStyle.personCardRole,
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class _RowOfPersonCardWidget extends StatelessWidget {
+  final List<_PersonCardWidget> list;
+
+  const _RowOfPersonCardWidget({
+    Key? key,
+    required this.list,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: Row(
+        children: list,
+      ),
     );
   }
 }

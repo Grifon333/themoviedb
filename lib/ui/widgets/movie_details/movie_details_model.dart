@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:themoviedb/domain/api_client/api_client.dart';
@@ -26,7 +25,6 @@ class MovieDetailsModel extends ChangeNotifier {
     _locale = locale;
     _countryCode = countryCode;
     // _dateFormat = DateFormat.yMMMMd(locale);
-    // _dateFormat = DateFormat.yMd(locale);
     _dateFormat = DateFormat.yMd(locale);
     await _loadDetails();
   }
