@@ -6,8 +6,8 @@ import 'package:themoviedb/ui/navigation/main_navigation.dart';
 class AuthModel extends ChangeNotifier {
   final _apiClient = ApiClient();
   final _sessionDataProvider = SessionDataProvider();
-  final controllerUsername = TextEditingController(text: 'jonfir');
-  final controllerPassword = TextEditingController(text: 'P61{fSf?E{_u');
+  final controllerUsername = TextEditingController();
+  final controllerPassword = TextEditingController();
 
   String? _errorMessage;
 

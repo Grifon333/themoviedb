@@ -11,8 +11,9 @@ class MovieDetailsScreenCastWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = NotifierProvider.watch<MovieDetailsModel>(context);
-    final cast = model?.movieDetails?.credits.cast.getRange(0, 9);
+    final cast = model?.movieDetails?.credits.cast;
     if (cast == null) return const SizedBox.shrink();
+
     List<_PersonInfo> people = [];
     people = cast.map((e) {
       final profilePath = e.profilePath != null
@@ -50,15 +51,14 @@ class MovieDetailsScreenCastWidget extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: 260,
+          height: 280,
           child: Scrollbar(
             thickness: 7,
             radius: const Radius.circular(4),
-            thumbVisibility: true,
             child: ListView.builder(
               padding: const EdgeInsets.only(left: 14),
-              itemCount: people.length,
-              itemExtent: 134,
+              itemCount: people.length > 9 ? 9 : people.length,
+              itemExtent: 136,
               scrollDirection: Axis.horizontal,
               itemBuilder: (BuildContext context, int index) {
                 return Padding(

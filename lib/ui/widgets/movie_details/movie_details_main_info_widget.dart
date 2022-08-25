@@ -6,6 +6,7 @@ import 'package:themoviedb/domain/api_client/api_client.dart';
 import 'package:themoviedb/domain/entity/movie_details_credits.dart';
 import 'package:themoviedb/ui/widgets/elements/radial_percent_widget.dart';
 import 'package:themoviedb/ui/widgets/movie_details/movie_details_model.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class MovieDetailsMainInfoWidget extends StatelessWidget {
   const MovieDetailsMainInfoWidget({Key? key}) : super(key: key);
@@ -111,13 +112,62 @@ class _TitleWidget extends StatelessWidget {
   }
 }
 
-class _SecondHeaderWidget extends StatelessWidget {
+class _SecondHeaderWidget extends StatefulWidget {
   const _SecondHeaderWidget({Key? key}) : super(key: key);
+
+  @override
+  State<_SecondHeaderWidget> createState() => _SecondHeaderWidgetState();
+}
+
+class _SecondHeaderWidgetState extends State<_SecondHeaderWidget> {
+  Future<void> _showDialog(
+    String youtubeKey,
+  ) async {
+    final controller = YoutubePlayerController(
+      initialVideoId: youtubeKey,
+      flags: const YoutubePlayerFlags(
+        autoPlay: false,
+      ),
+    );
+
+    return showDialog<void>(
+      context: context,
+      useSafeArea: false,
+      builder: (BuildContext context) {
+        return OrientationBuilder(builder: (context, orientation) {
+          return AlertDialog(
+            title: const Text(
+              'Play Trailer',
+              style: TextStyle(color: Colors.white),
+            ),
+            insetPadding: orientation == Orientation.portrait
+                ? const EdgeInsets.all(20)
+                : EdgeInsets.zero,
+            titlePadding: const EdgeInsets.all(16),
+            content: YoutubePlayer(
+              controller: controller,
+            ),
+            contentPadding: EdgeInsets.zero,
+            backgroundColor: Colors.black,
+          );
+        });
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final model = NotifierProvider.watch<MovieDetailsModel>(context);
     final scale = model?.movieDetails?.voteAverage ?? 0;
+    final videos = model?.movieDetails?.videos;
+    if (videos == null) return const SizedBox.shrink();
+    final youtubeKey = videos.results
+        .where((video) =>
+            video.site == 'YouTube' &&
+            video.type == 'Trailer' &&
+            video.official == true)
+        .first
+        .key;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -147,7 +197,7 @@ class _SecondHeaderWidget extends StatelessWidget {
           style: ButtonStyle(
             padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
           ),
-          onPressed: () {},
+          onPressed: () => _showDialog(youtubeKey),
           child: Row(
             children: const [
               Icon(

@@ -24,7 +24,6 @@ class MovieDetailsModel extends ChangeNotifier {
     if (locale == _locale || countryCode == _countryCode) return;
     _locale = locale;
     _countryCode = countryCode;
-    // _dateFormat = DateFormat.yMMMMd(locale);
     _dateFormat = DateFormat.yMd(locale);
     await _loadDetails();
   }

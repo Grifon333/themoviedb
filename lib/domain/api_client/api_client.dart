@@ -234,7 +234,7 @@ class ApiClient {
     final parameters = {
       'api_key': _apiKey,
       'language': language,
-      'append_to_response': 'credits',
+      'append_to_response': 'credits,videos',
     };
 
     final result = _get(
