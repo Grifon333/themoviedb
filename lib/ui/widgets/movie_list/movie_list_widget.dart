@@ -12,6 +12,7 @@ class MovieListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = NotifierProvider.watch<MovieListModel>(context);
     if (model == null) return const SizedBox.shrink();
+    // if (model.movies.isEmpty) return const Center(child: CircularProgressIndicator());
 
     return Padding(
         padding: const EdgeInsets.all(10.0),
@@ -23,7 +24,6 @@ class MovieListWidget extends StatelessWidget {
               itemCount: model.movies.length,
               itemExtent: 161,
               itemBuilder: (BuildContext context, int index) {
-                // if (model.movies.length == 0) return const SizedBox.shrink();
                 final movie = model.movies[index];
                 final posterPath = movie.posterPath;
                 model.showMovieAtIndex(index);

@@ -26,6 +26,9 @@ class _MovieDetailsWidgetState extends State<MovieDetailsWidget> {
       appBar: AppBar(
         title: const _TitleWidget(),
         centerTitle: true,
+        actions: const [
+          _FavoriteWidget(),
+        ],
       ),
       body: const _BodyWidget(),
     );
@@ -39,6 +42,24 @@ class _TitleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = NotifierProvider.watch<MovieDetailsModel>(context);
     return Text(model?.movieDetails?.title ?? 'Loading...');
+  }
+}
+
+class _FavoriteWidget extends StatelessWidget {
+  const _FavoriteWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final model = NotifierProvider.watch<MovieDetailsModel>(context);
+    if (model == null) return const SizedBox.shrink();
+    final isFavorite = model.isFavorite();
+
+    return IconButton(
+      onPressed: () => model.changeFavorite(),
+      icon: isFavorite
+          ? const Icon(Icons.favorite)
+          : const Icon(Icons.favorite_outline),
+    );
   }
 }
 

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:themoviedb/domain/api_client/api_client.dart';
+import 'package:themoviedb/domain/data_providers/session_data_provider.dart';
 import 'package:themoviedb/domain/entity/movie_details.dart';
 
 class MovieDetailsModel extends ChangeNotifier {
   final _apiClient = ApiClient();
+  final _sessionDataProvider = SessionDataProvider();
 
   int movieId;
   MovieDetails? _movieDetails;
@@ -13,10 +15,17 @@ class MovieDetailsModel extends ChangeNotifier {
   String _countryCode = '';
   late DateFormat _dateFormat;
 
+  bool _favorite = false;
+
   MovieDetails? get movieDetails => _movieDetails;
+
   String get certification => _certification;
 
-  MovieDetailsModel({required this.movieId,});
+  bool isFavorite() => _favorite;
+
+  MovieDetailsModel({
+    required this.movieId,
+  });
 
   Future<void> setupLocale(BuildContext context) async {
     final locale = Localizations.localeOf(context).toLanguageTag();
@@ -31,8 +40,29 @@ class MovieDetailsModel extends ChangeNotifier {
   Future<void> _loadDetails() async {
     _movieDetails = await _apiClient.movieDetails(_locale, movieId);
     _certification = await _apiClient.certification(movieId, _countryCode);
+    final sessionId = await _sessionDataProvider.getSessionId();
+    if (sessionId != null) {
+      _favorite = await _apiClient.isFavoriteMovie(movieId, sessionId);
+    }
     notifyListeners();
   }
 
   String stringFromDate(DateTime date) => _dateFormat.format(date);
+
+  Future<void> changeFavorite() async {
+    final accountId = await _sessionDataProvider.getAccountId();
+    final sessionId = await _sessionDataProvider.getSessionId();
+
+    _favorite = !_favorite;
+    notifyListeners();
+    if (accountId == null || sessionId == null) return;
+
+    await _apiClient.markAsFavorite(
+      sessionId,
+      accountId,
+      MediaType.movie,
+      movieId,
+      _favorite,
+    );
+  }
 }

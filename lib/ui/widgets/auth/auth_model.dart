@@ -10,11 +10,9 @@ class AuthModel extends ChangeNotifier {
   final controllerPassword = TextEditingController();
 
   String? _errorMessage;
-
-  String? get errorMessage => _errorMessage;
-
   bool _isAuthProgress = false;
 
+  String? get errorMessage => _errorMessage;
   bool get canStartAuth => !_isAuthProgress;
 
   // We couldn\'t validate your information.\n   Want to try again?
@@ -33,8 +31,13 @@ class AuthModel extends ChangeNotifier {
     notifyListeners();
 
     String? sessionId;
+    int? accountId;
     try {
-      sessionId = await _apiClient.auth(username: username, password: password);
+      sessionId = await _apiClient.auth(
+        username: username,
+        password: password,
+      );
+      accountId = await _apiClient.getAccountId(sessionId);
     } on ApiClientException catch (e) {
       switch (e.type) {
         case ApiClientExceptionType.network:
@@ -55,13 +58,14 @@ class AuthModel extends ChangeNotifier {
       notifyListeners();
       return;
     }
-    if (sessionId == null) {
+    if (sessionId == null || accountId == null) {
       _errorMessage = 'Error';
       notifyListeners();
       return;
     }
 
     await _sessionDataProvider.setSessionId(sessionId);
+    await _sessionDataProvider.setAccountId(accountId);
     Navigator.of(context)
         .pushReplacementNamed(MainNavigationRouteNames.mainScreen);
   }
