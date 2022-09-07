@@ -51,7 +51,7 @@ class MovieDetailsScreenCastWidget extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: 280,
+          height: 300,
           child: Scrollbar(
             thickness: 7,
             radius: const Radius.circular(4),

@@ -158,16 +158,21 @@ class _SecondHeaderWidgetState extends State<_SecondHeaderWidget> {
   @override
   Widget build(BuildContext context) {
     final model = NotifierProvider.watch<MovieDetailsModel>(context);
-    final scale = model?.movieDetails?.voteAverage ?? 0;
-    final videos = model?.movieDetails?.videos;
+    if (model == null) return const SizedBox.shrink();
+    final scale = model.movieDetails?.voteAverage ?? 0;
+    final videos = model.movieDetails?.videos;
     if (videos == null) return const SizedBox.shrink();
-    final youtubeKey = videos.results
-        .where((video) =>
-            video.site == 'YouTube' &&
-            video.type == 'Trailer' &&
-            video.official == true)
-        .first
-        .key;
+
+    String? youtubeKey;
+    if (videos.results.isNotEmpty) {
+      final list = videos.results.where((video) =>
+          video.site == 'YouTube' &&
+          video.type == 'Trailer' &&
+          video.official == true);
+      if (list.isNotEmpty) {
+        youtubeKey = list.first.key;
+      }
+    }
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -197,7 +202,7 @@ class _SecondHeaderWidgetState extends State<_SecondHeaderWidget> {
           style: ButtonStyle(
             padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
           ),
-          onPressed: () => _showDialog(youtubeKey),
+          onPressed: () => youtubeKey != null ? _showDialog(youtubeKey) : null,
           child: Row(
             children: const [
               Icon(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:themoviedb/Library/Widgets/Inherited/provider.dart';
+import 'package:themoviedb/ui/widgets/app/my_app_model.dart';
 import 'package:themoviedb/ui/widgets/movie_details/movie_details_main_info_widget.dart';
 import 'package:themoviedb/ui/widgets/movie_details/movie_details_model.dart';
 import 'package:themoviedb/ui/widgets/movie_details/movie_details_screen_cast_widget.dart';
@@ -14,6 +15,14 @@ class MovieDetailsWidget extends StatefulWidget {
 }
 
 class _MovieDetailsWidgetState extends State<MovieDetailsWidget> {
+  @override
+  void initState() {
+    final model = NotifierProvider.read<MovieDetailsModel>(context);
+    final appModel = Provider.read<MyAppModel>(context);
+    model?.onSessionExpired = () => appModel?.resetSession(context);
+    super.initState();
+  }
+
   @override
   void didChangeDependencies() {
     NotifierProvider.read<MovieDetailsModel>(context)?.setupLocale(context);
@@ -55,7 +64,7 @@ class _FavoriteWidget extends StatelessWidget {
     final isFavorite = model.isFavorite();
 
     return IconButton(
-      onPressed: () => model.changeFavorite(),
+      onPressed: () => model.changeFavorite(context),
       icon: isFavorite
           ? const Icon(Icons.favorite)
           : const Icon(Icons.favorite_outline),

@@ -14,6 +14,7 @@ class MovieDetailsModel extends ChangeNotifier {
   String _locale = '';
   String _countryCode = '';
   late DateFormat _dateFormat;
+  Future<void>? Function()? onSessionExpired;
 
   bool _favorite = false;
 
@@ -49,7 +50,7 @@ class MovieDetailsModel extends ChangeNotifier {
 
   String stringFromDate(DateTime date) => _dateFormat.format(date);
 
-  Future<void> changeFavorite() async {
+  Future<void> changeFavorite(BuildContext context) async {
     final accountId = await _sessionDataProvider.getAccountId();
     final sessionId = await _sessionDataProvider.getSessionId();
 
@@ -57,12 +58,18 @@ class MovieDetailsModel extends ChangeNotifier {
     notifyListeners();
     if (accountId == null || sessionId == null) return;
 
-    await _apiClient.markAsFavorite(
-      sessionId,
-      accountId,
-      MediaType.movie,
-      movieId,
-      _favorite,
-    );
+    try {
+      await _apiClient.markAsFavorite(
+        sessionId,
+        accountId,
+        MediaType.movie,
+        movieId,
+        _favorite,
+      );
+    } on ApiClientException catch (e) {
+      if (e.type == ApiClientExceptionType.sessionExpired) {
+        await onSessionExpired?.call();
+      }
+    }
   }
 }
