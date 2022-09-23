@@ -1,6 +1,6 @@
 # themoviedb
 
-A new Flutter project.
+The movie DB
 
 ## Getting Started
 
