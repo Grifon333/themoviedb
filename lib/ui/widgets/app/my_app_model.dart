@@ -16,6 +16,7 @@ class MyAppModel {
   Future<void> resetSession(BuildContext context) async {
     await _sessionDataProvider.setAccountId(null);
     await _sessionDataProvider.setSessionId(null);
+    if (!context.mounted) return;
     await Navigator.of(context).pushNamedAndRemoveUntil(
         MainNavigationRouteNames.auth, (route) => false);
   }

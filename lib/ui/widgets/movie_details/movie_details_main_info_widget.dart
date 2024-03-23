@@ -9,14 +9,14 @@ import 'package:themoviedb/ui/widgets/movie_details/movie_details_model.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class MovieDetailsMainInfoWidget extends StatelessWidget {
-  const MovieDetailsMainInfoWidget({Key? key}) : super(key: key);
+  const MovieDetailsMainInfoWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ColoredBox(
+    return const ColoredBox(
       color: AppColors.thorLoveAndThunderBg,
       child: Column(
-        children: const [
+        children: [
           _TopPosterWidget(),
           SizedBox(height: 16),
           Padding(
@@ -46,7 +46,7 @@ class MovieDetailsMainInfoWidget extends StatelessWidget {
 }
 
 class _TopPosterWidget extends StatelessWidget {
-  const _TopPosterWidget({Key? key}) : super(key: key);
+  const _TopPosterWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +84,7 @@ class _TopPosterWidget extends StatelessWidget {
 }
 
 class _TitleWidget extends StatelessWidget {
-  const _TitleWidget({Key? key}) : super(key: key);
+  const _TitleWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +113,7 @@ class _TitleWidget extends StatelessWidget {
 }
 
 class _SecondHeaderWidget extends StatefulWidget {
-  const _SecondHeaderWidget({Key? key}) : super(key: key);
+  const _SecondHeaderWidget({super.key});
 
   @override
   State<_SecondHeaderWidget> createState() => _SecondHeaderWidgetState();
@@ -203,8 +203,8 @@ class _SecondHeaderWidgetState extends State<_SecondHeaderWidget> {
             padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
           ),
           onPressed: () => youtubeKey != null ? _showDialog(youtubeKey) : null,
-          child: Row(
-            children: const [
+          child: const Row(
+            children: [
               Icon(
                 Icons.play_arrow,
                 color: Colors.white,
@@ -223,7 +223,7 @@ class _SecondHeaderWidgetState extends State<_SecondHeaderWidget> {
 }
 
 class _GenreWrapperWidget extends StatelessWidget {
-  const _GenreWrapperWidget({Key? key}) : super(key: key);
+  const _GenreWrapperWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -291,7 +291,7 @@ class _GenreWrapperWidget extends StatelessWidget {
 }
 
 class _TagLineWidget extends StatelessWidget {
-  const _TagLineWidget({Key? key}) : super(key: key);
+  const _TagLineWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -313,7 +313,7 @@ class _TagLineWidget extends StatelessWidget {
 }
 
 class _OverviewWidget extends StatelessWidget {
-  const _OverviewWidget({Key? key}) : super(key: key);
+  const _OverviewWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -341,7 +341,7 @@ class _OverviewWidget extends StatelessWidget {
 }
 
 class _PeopleWidget extends StatelessWidget {
-  const _PeopleWidget({Key? key}) : super(key: key);
+  const _PeopleWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -416,10 +416,10 @@ class _PersonCardWidget extends StatelessWidget {
   final String role;
 
   const _PersonCardWidget({
-    Key? key,
+    super.key,
     required this.name,
     required this.role,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -445,9 +445,9 @@ class _RowOfPersonCardWidget extends StatelessWidget {
   final List<_PersonCardWidget> list;
 
   const _RowOfPersonCardWidget({
-    Key? key,
+    super.key,
     required this.list,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

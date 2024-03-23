@@ -13,10 +13,8 @@ class AuthModel extends ChangeNotifier {
   bool _isAuthProgress = false;
 
   String? get errorMessage => _errorMessage;
-  bool get canStartAuth => !_isAuthProgress;
 
-  // We couldn\'t validate your information.\n   Want to try again?
-  // We couldn\'t find your username
+  bool get canStartAuth => !_isAuthProgress;
 
   Future<void> auth(BuildContext context) async {
     final username = controllerUsername.text;
@@ -50,6 +48,9 @@ class AuthModel extends ChangeNotifier {
         case ApiClientExceptionType.other:
           _errorMessage = 'There was an error. Try again';
           break;
+        case ApiClientExceptionType.sessionExpired:
+          // TODO: Handle this case.
+          break;
       }
     }
     _isAuthProgress = false;
@@ -66,6 +67,7 @@ class AuthModel extends ChangeNotifier {
 
     await _sessionDataProvider.setSessionId(sessionId);
     await _sessionDataProvider.setAccountId(accountId);
+    if (!context.mounted) return;
     Navigator.of(context)
         .pushReplacementNamed(MainNavigationRouteNames.mainScreen);
   }

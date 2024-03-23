@@ -11,7 +11,9 @@ class MovieDetailsVideos {
   });
 
   Map<String, dynamic> toJson() => _$MovieDetailsVideosToJson(this);
-  factory MovieDetailsVideos.fromJson(Map<String, dynamic> json) => _$MovieDetailsVideosFromJson(json);
+
+  factory MovieDetailsVideos.fromJson(Map<String, dynamic> json) =>
+      _$MovieDetailsVideosFromJson(json);
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake)
@@ -41,5 +43,7 @@ class Results {
   });
 
   Map<String, dynamic> toJson() => _$ResultsToJson(this);
-  factory Results.fromJson(Map<String, dynamic> json) => _$ResultsFromJson(json);
+
+  factory Results.fromJson(Map<String, dynamic> json) =>
+      _$ResultsFromJson(json);
 }

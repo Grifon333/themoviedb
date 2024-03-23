@@ -7,8 +7,8 @@ import 'package:themoviedb/ui/widgets/movie_details/movie_details_screen_cast_wi
 
 class MovieDetailsWidget extends StatefulWidget {
   const MovieDetailsWidget({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<MovieDetailsWidget> createState() => _MovieDetailsWidgetState();
@@ -45,7 +45,7 @@ class _MovieDetailsWidgetState extends State<MovieDetailsWidget> {
 }
 
 class _TitleWidget extends StatelessWidget {
-  const _TitleWidget({Key? key}) : super(key: key);
+  const _TitleWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +55,7 @@ class _TitleWidget extends StatelessWidget {
 }
 
 class _FavoriteWidget extends StatelessWidget {
-  const _FavoriteWidget({Key? key}) : super(key: key);
+  const _FavoriteWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +73,7 @@ class _FavoriteWidget extends StatelessWidget {
 }
 
 class _BodyWidget extends StatelessWidget {
-  const _BodyWidget({Key? key}) : super(key: key);
+  const _BodyWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

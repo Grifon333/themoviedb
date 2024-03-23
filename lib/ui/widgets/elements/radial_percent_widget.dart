@@ -8,10 +8,10 @@ class RadialPercentWidget extends StatelessWidget {
   final Widget child;
 
   const RadialPercentWidget({
-    Key? key,
+    super.key,
     required this.score,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

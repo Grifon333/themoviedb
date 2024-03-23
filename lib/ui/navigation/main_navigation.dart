@@ -42,8 +42,12 @@ class MainNavigation {
         );
       default:
         return MaterialPageRoute(
-            builder: (context) =>
-                const Scaffold(body: Center(child: Text('Navigation error'))));
+          builder: (context) => const Scaffold(
+            body: Center(
+              child: Text('Navigation error'),
+            ),
+          ),
+        );
     }
   }
 }

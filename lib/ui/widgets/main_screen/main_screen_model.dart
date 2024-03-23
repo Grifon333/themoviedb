@@ -1,5 +1,3 @@
 import 'package:flutter/material.dart';
 
-class MainScreenModel extends ChangeNotifier {
-
-}
+class MainScreenModel extends ChangeNotifier {}

@@ -9,8 +9,8 @@ class MyApp extends StatelessWidget {
   static final mainNavigation = MainNavigation();
 
   const MyApp({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

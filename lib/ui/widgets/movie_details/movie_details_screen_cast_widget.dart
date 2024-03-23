@@ -6,7 +6,7 @@ import 'package:themoviedb/resources/resources.dart';
 import 'package:themoviedb/ui/widgets/movie_details/movie_details_model.dart';
 
 class MovieDetailsScreenCastWidget extends StatelessWidget {
-  const MovieDetailsScreenCastWidget({Key? key}) : super(key: key);
+  const MovieDetailsScreenCastWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -80,9 +80,9 @@ class _PersonCardWidget extends StatelessWidget {
   final _PersonInfo person;
 
   const _PersonCardWidget({
-    Key? key,
+    super.key,
     required this.person,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

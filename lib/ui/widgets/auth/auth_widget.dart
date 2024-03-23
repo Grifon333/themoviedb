@@ -6,7 +6,7 @@ import 'package:themoviedb/Theme/app_text_style.dart';
 import 'package:themoviedb/ui/widgets/auth/auth_model.dart';
 
 class AuthWidget extends StatefulWidget {
-  const AuthWidget({Key? key}) : super(key: key);
+  const AuthWidget({super.key});
 
   @override
   State<AuthWidget> createState() => _AuthWidgetState();
@@ -20,14 +20,14 @@ class _AuthWidgetState extends State<AuthWidget> {
         leading: const Icon(Icons.menu),
         actions: [
           IconButton(
-            onPressed: () => print('show up menu'),
+            onPressed: () => debugPrint('show up menu'),
             icon: const Icon(
               Icons.person,
               color: Colors.white,
             ),
           ),
           IconButton(
-            onPressed: () => print('show search menu'),
+            onPressed: () => debugPrint('show search menu'),
             icon: const Icon(
               Icons.search,
               color: AppColors.lightBlue,
@@ -50,7 +50,7 @@ class _AuthWidgetState extends State<AuthWidget> {
 }
 
 class _HeaderWidget extends StatelessWidget {
-  const _HeaderWidget({Key? key}) : super(key: key);
+  const _HeaderWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +109,7 @@ class _HeaderWidget extends StatelessWidget {
 }
 
 class _FormWidget extends StatelessWidget {
-  const _FormWidget({Key? key}) : super(key: key);
+  const _FormWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -175,8 +175,8 @@ class _FormWidget extends StatelessWidget {
 
 class _AuthButtonWidget extends StatelessWidget {
   const _AuthButtonWidget({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -184,7 +184,8 @@ class _AuthButtonWidget extends StatelessWidget {
     final backgroundColor = model?.canStartAuth == true
         ? MaterialStateProperty.all(AppColors.lightBlue)
         : MaterialStateProperty.all(Colors.grey);
-    final onPressed = model?.canStartAuth == true ? () => model?.auth(context) : null;
+    final onPressed =
+        model?.canStartAuth == true ? () => model?.auth(context) : null;
 
     return ElevatedButton(
       onPressed: onPressed,
@@ -205,43 +206,15 @@ class _AuthButtonWidget extends StatelessWidget {
   }
 }
 
-// class _InvalidWidget extends StatelessWidget {
-//   const _InvalidWidget({Key? key}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       color: AppColors.mainColor,
-//       padding: const EdgeInsets.symmetric(
-//         horizontal: 20,
-//         vertical: 30,
-//       ),
-//       child: Column(
-//         children: const [
-//           Text(
-//             'Invalid Session',
-//             style: TextStyle(
-//                 fontSize: 24, fontWeight: FontWeight.w600, color: Colors.white),
-//           ),
-//           Text(
-//             'We couldn`t validate your login session. You can refresh this '
-//             'page and try again.',
-//             style: TextStyle(fontSize: 20, color: Colors.white),
-//           )
-//         ],
-//       ),
-//     );
-//   }
-// }
-
 class _ShowErrorWidget extends StatelessWidget {
   const _ShowErrorWidget({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final errorMessage = NotifierProvider.watch<AuthModel>(context)?.errorMessage;
+    final errorMessage =
+        NotifierProvider.watch<AuthModel>(context)?.errorMessage;
     if (errorMessage == null) return const SizedBox.shrink();
 
     return Column(
@@ -257,8 +230,8 @@ class _ShowErrorWidget extends StatelessWidget {
                 topRight: Radius.circular(7),
               ),
             ),
-            child: Row(
-              children: const [
+            child: const Row(
+              children: [
                 Icon(
                   Icons.warning,
                   color: Colors.white,
