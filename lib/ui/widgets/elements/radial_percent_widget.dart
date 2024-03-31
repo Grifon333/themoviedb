@@ -60,8 +60,10 @@ class _Painter extends CustomPainter {
 
     canvas.drawArc(
       Offset(padding + stroke / 2, padding + stroke / 2) &
-          Size(size.width - padding * 2 - stroke,
-              size.height - padding * 2 - stroke),
+          Size(
+            size.width - padding * 2 - stroke,
+            size.height - padding * 2 - stroke,
+          ),
       -pi / 2,
       2 * pi * score,
       false,

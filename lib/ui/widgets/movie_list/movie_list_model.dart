@@ -78,7 +78,7 @@ class MovieListModel extends ChangeNotifier {
     );
   }
 
-  String stringFromData(DateTime date) => _dateFormat.format(date);
+  String stringFromDate(DateTime date) => _dateFormat.format(date);
 
   void showMovieAtIndex(int index) {
     if (index < _movies.length - 1) return;

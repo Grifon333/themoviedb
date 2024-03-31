@@ -29,7 +29,7 @@ abstract class AppTextStyle {
     fontSize: 16,
     fontWeight: FontWeight.w600,
   );
-  static const dataFilmInCard = TextStyle(
+  static const dateFilmInCard = TextStyle(
     fontSize: 14,
     color: AppColors.dataText,
   );

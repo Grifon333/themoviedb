@@ -74,8 +74,8 @@ class MovieListWidget extends StatelessWidget {
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                     Text(
-                                      model.stringFromData(movie.releaseDate),
-                                      style: AppTextStyle.dataFilmInCard,
+                                      model.stringFromDate(movie.releaseDate),
+                                      style: AppTextStyle.dateFilmInCard,
                                     ),
                                     const SizedBox(height: 20),
                                     Text(

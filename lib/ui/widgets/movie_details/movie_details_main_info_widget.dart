@@ -14,7 +14,7 @@ class MovieDetailsMainInfoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const ColoredBox(
-      color: AppColors.thorLoveAndThunderBg,
+      color: AppColors.movie_info_background,
       child: Column(
         children: [
           _TopPosterWidget(),
@@ -134,23 +134,25 @@ class _SecondHeaderWidgetState extends State<_SecondHeaderWidget> {
       context: context,
       useSafeArea: false,
       builder: (BuildContext context) {
-        return OrientationBuilder(builder: (context, orientation) {
-          return AlertDialog(
-            title: const Text(
-              'Play Trailer',
-              style: TextStyle(color: Colors.white),
-            ),
-            insetPadding: orientation == Orientation.portrait
-                ? const EdgeInsets.all(20)
-                : EdgeInsets.zero,
-            titlePadding: const EdgeInsets.all(16),
-            content: YoutubePlayer(
-              controller: controller,
-            ),
-            contentPadding: EdgeInsets.zero,
-            backgroundColor: Colors.black,
-          );
-        });
+        return OrientationBuilder(
+          builder: (context, orientation) {
+            return AlertDialog(
+              title: const Text(
+                'Play Trailer',
+                style: TextStyle(color: Colors.white),
+              ),
+              insetPadding: orientation == Orientation.portrait
+                  ? const EdgeInsets.all(20)
+                  : EdgeInsets.zero,
+              titlePadding: const EdgeInsets.all(16),
+              content: YoutubePlayer(
+                controller: controller,
+              ),
+              contentPadding: EdgeInsets.zero,
+              backgroundColor: Colors.black,
+            );
+          },
+        );
       },
     );
   }
@@ -193,10 +195,12 @@ class _SecondHeaderWidgetState extends State<_SecondHeaderWidget> {
             ),
           ],
         ),
-        Container(
-          width: 1,
-          height: 24,
+        ColoredBox(
           color: AppColors.verticalDivider,
+          child: const SizedBox(
+            width: 1,
+            height: 24,
+          ),
         ),
         TextButton(
           style: ButtonStyle(
@@ -295,11 +299,9 @@ class _TagLineWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.watch<MovieDetailsModel>(context);
+    final model = NotifierProvider.read<MovieDetailsModel>(context);
     final tagLine = model?.movieDetails?.tagline;
-    if (tagLine == null) {
-      return const SizedBox.shrink();
-    }
+    if (tagLine == null) return const SizedBox.shrink();
 
     return Text(
       tagLine,
