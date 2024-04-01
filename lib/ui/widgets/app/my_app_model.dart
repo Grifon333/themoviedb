@@ -18,6 +18,6 @@ class MyAppModel {
     await _sessionDataProvider.setSessionId(null);
     if (!context.mounted) return;
     await Navigator.of(context).pushNamedAndRemoveUntil(
-        MainNavigationRouteNames.auth, (route) => false);
+        MainNavigationRouteNames.authScreen, (route) => false);
   }
 }
