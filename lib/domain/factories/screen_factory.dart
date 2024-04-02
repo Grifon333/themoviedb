@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:themoviedb/Library/Widgets/Inherited/provider.dart' as old_provider;
-import 'package:themoviedb/ui/widgets/auth/auth_model.dart';
+import 'package:themoviedb/ui/widgets/auth/auth_view_model.dart';
 import 'package:themoviedb/ui/widgets/auth/auth_widget.dart';
 import 'package:themoviedb/ui/widgets/loader/loader_view_model.dart';
 import 'package:themoviedb/ui/widgets/loader/loader_widget.dart';
@@ -20,8 +20,8 @@ class ScreenFactory {
   }
 
   Widget makeAuthScreen() {
-    return old_provider.NotifierProvider(
-      create: () => AuthModel(),
+    return ChangeNotifierProvider(
+      create: (context) => AuthViewModel(context),
       child: const AuthWidget(),
     );
   }

@@ -1,18 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:themoviedb/Library/Widgets/Inherited/provider.dart';
+import 'package:provider/provider.dart';
 import 'package:themoviedb/Theme/app_colors.dart';
 import 'package:themoviedb/Theme/app_text_style.dart';
-import 'package:themoviedb/ui/widgets/auth/auth_model.dart';
+import 'package:themoviedb/ui/widgets/auth/auth_view_model.dart';
 
-class AuthWidget extends StatefulWidget {
+class AuthWidget extends StatelessWidget {
   const AuthWidget({super.key});
 
-  @override
-  State<AuthWidget> createState() => _AuthWidgetState();
-}
-
-class _AuthWidgetState extends State<AuthWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +36,6 @@ class _AuthWidgetState extends State<AuthWidget> {
       ),
       body: ListView(
         children: const [
-          // _InvalidWidget(),
           _HeaderWidget(),
         ],
       ),
@@ -50,7 +44,7 @@ class _AuthWidgetState extends State<AuthWidget> {
 }
 
 class _HeaderWidget extends StatelessWidget {
-  const _HeaderWidget({super.key});
+  const _HeaderWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -109,11 +103,11 @@ class _HeaderWidget extends StatelessWidget {
 }
 
 class _FormWidget extends StatelessWidget {
-  const _FormWidget({super.key});
+  const _FormWidget();
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.read<AuthModel>(context);
+    final model = context.read<AuthViewModel>();
     const decoration = InputDecoration(
       enabledBorder: OutlineInputBorder(
         borderSide: BorderSide(
@@ -142,7 +136,7 @@ class _FormWidget extends StatelessWidget {
         ),
         TextField(
           decoration: decoration,
-          controller: model?.controllerUsername,
+          onChanged: model.onChangeUsername,
         ),
         const SizedBox(height: 16),
         const Text(
@@ -151,7 +145,7 @@ class _FormWidget extends StatelessWidget {
         ),
         TextField(
           decoration: decoration,
-          controller: model?.controllerPassword,
+          onChanged: model.onChangePassword,
           obscureText: true,
         ),
         const SizedBox(height: 30),
@@ -174,18 +168,18 @@ class _FormWidget extends StatelessWidget {
 }
 
 class _AuthButtonWidget extends StatelessWidget {
-  const _AuthButtonWidget({
-    super.key,
-  });
+  const _AuthButtonWidget();
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.watch<AuthModel>(context);
-    final backgroundColor = model?.canStartAuth == true
-        ? MaterialStateProperty.all(AppColors.lightBlue)
-        : MaterialStateProperty.all(Colors.grey);
-    final onPressed =
-        model?.canStartAuth == true ? () => model?.auth(context) : null;
+    final model = context.read<AuthViewModel>();
+    final canStartAuth =
+        context.select((AuthViewModel vm) => !vm.state.isAuthProgress);
+
+    final backgroundColor = MaterialStatePropertyAll(
+      canStartAuth ? AppColors.lightBlue : Colors.grey,
+    );
+    final onPressed = canStartAuth ? () => model.auth() : null;
 
     return ElevatedButton(
       onPressed: onPressed,
@@ -207,14 +201,12 @@ class _AuthButtonWidget extends StatelessWidget {
 }
 
 class _ShowErrorWidget extends StatelessWidget {
-  const _ShowErrorWidget({
-    super.key,
-  });
+  const _ShowErrorWidget();
 
   @override
   Widget build(BuildContext context) {
     final errorMessage =
-        NotifierProvider.watch<AuthModel>(context)?.errorMessage;
+        context.select((AuthViewModel vm) => vm.state.errorMessage);
     if (errorMessage == null) return const SizedBox.shrink();
 
     return Column(

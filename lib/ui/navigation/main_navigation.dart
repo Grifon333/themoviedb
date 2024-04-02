@@ -36,4 +36,11 @@ class MainNavigation {
         );
     }
   }
+
+  static void goLoader(BuildContext context) {
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      MainNavigationRouteNames.loaderScreen,
+      (route) => false,
+    );
+  }
 }
