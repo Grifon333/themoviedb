@@ -1,9 +1,11 @@
-import 'package:themoviedb/domain/api_client/api_client.dart';
+import 'package:themoviedb/domain/api_client/account_api_client.dart';
+import 'package:themoviedb/domain/api_client/auth_api_client.dart';
 import 'package:themoviedb/domain/data_providers/session_data_provider.dart';
 
 class AuthRepository {
   final _sessionDataProvider = SessionDataProvider();
-  final _apiClient = ApiClient();
+  final _authApiClient = AuthApiClient();
+  final _accountApiClient = AccountApiClient();
 
   Future<bool> isAuth() async {
     final sessionId = await _sessionDataProvider.getSessionId();
@@ -11,11 +13,11 @@ class AuthRepository {
   }
 
   Future<void> login(String username, String password) async {
-    final sessionId = await _apiClient.auth(
+    final sessionId = await _authApiClient.auth(
       username: username,
       password: password,
     );
-    final accountId = await _apiClient.getAccountId(sessionId);
+    final accountId = await _accountApiClient.getAccountId(sessionId);
     await _sessionDataProvider.setSessionId(sessionId);
     await _sessionDataProvider.setAccountId(accountId);
   }

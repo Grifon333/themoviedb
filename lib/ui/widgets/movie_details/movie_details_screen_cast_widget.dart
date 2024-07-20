@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:themoviedb/Library/Widgets/Inherited/provider.dart';
 import 'package:themoviedb/Theme/app_colors.dart';
-import 'package:themoviedb/domain/api_client/api_client.dart';
+import 'package:themoviedb/domain/api_client/image_downloader.dart';
 import 'package:themoviedb/resources/resources.dart';
 import 'package:themoviedb/ui/widgets/movie_details/movie_details_model.dart';
 
@@ -18,7 +18,7 @@ class MovieDetailsScreenCastWidget extends StatelessWidget {
     people = cast.map((e) {
       final profilePath = e.profilePath != null
           ? Image.network(
-              ApiClient.makeImage(e.profilePath ?? ''),
+              ImageDownloader.makeImage(e.profilePath ?? ''),
               width: 120,
               height: 133,
               fit: BoxFit.fitWidth,
@@ -80,7 +80,6 @@ class _PersonCardWidget extends StatelessWidget {
   final _PersonInfo person;
 
   const _PersonCardWidget({
-    super.key,
     required this.person,
   });
 

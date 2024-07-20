@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:themoviedb/domain/api_client/api_client.dart';
+import 'package:themoviedb/domain/api_client/api_client_exception.dart';
 import 'package:themoviedb/domain/repositories/auth_repository.dart';
 import 'package:themoviedb/ui/navigation/main_navigation.dart';
 

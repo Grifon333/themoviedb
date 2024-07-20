@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:themoviedb/Library/Widgets/Inherited/provider.dart';
 import 'package:themoviedb/Theme/app_colors.dart';
 import 'package:themoviedb/Theme/app_text_style.dart';
-import 'package:themoviedb/domain/api_client/api_client.dart';
+import 'package:themoviedb/domain/api_client/image_downloader.dart';
 import 'package:themoviedb/domain/entity/movie_details_credits.dart';
 import 'package:themoviedb/ui/widgets/elements/radial_percent_widget.dart';
 import 'package:themoviedb/ui/widgets/movie_details/movie_details_model.dart';
@@ -46,7 +46,7 @@ class MovieDetailsMainInfoWidget extends StatelessWidget {
 }
 
 class _TopPosterWidget extends StatelessWidget {
-  const _TopPosterWidget({super.key});
+  const _TopPosterWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,7 @@ class _TopPosterWidget extends StatelessWidget {
         children: [
           backdropPath != null
               ? Image.network(
-                  ApiClient.makeImage(backdropPath),
+                  ImageDownloader.makeImage(backdropPath),
                   fit: BoxFit.fitWidth,
                 )
               : const SizedBox.shrink(),
@@ -72,7 +72,7 @@ class _TopPosterWidget extends StatelessWidget {
               borderRadius: const BorderRadius.all(Radius.circular(6)),
               child: posterPath != null
                   ? Image.network(
-                      ApiClient.makeImage(posterPath),
+                      ImageDownloader.makeImage(posterPath),
                     )
                   : const SizedBox.shrink(),
             ),
@@ -84,7 +84,7 @@ class _TopPosterWidget extends StatelessWidget {
 }
 
 class _TitleWidget extends StatelessWidget {
-  const _TitleWidget({super.key});
+  const _TitleWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +113,7 @@ class _TitleWidget extends StatelessWidget {
 }
 
 class _SecondHeaderWidget extends StatefulWidget {
-  const _SecondHeaderWidget({super.key});
+  const _SecondHeaderWidget();
 
   @override
   State<_SecondHeaderWidget> createState() => _SecondHeaderWidgetState();
@@ -227,7 +227,7 @@ class _SecondHeaderWidgetState extends State<_SecondHeaderWidget> {
 }
 
 class _GenreWrapperWidget extends StatelessWidget {
-  const _GenreWrapperWidget({super.key});
+  const _GenreWrapperWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -295,7 +295,7 @@ class _GenreWrapperWidget extends StatelessWidget {
 }
 
 class _TagLineWidget extends StatelessWidget {
-  const _TagLineWidget({super.key});
+  const _TagLineWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -315,7 +315,7 @@ class _TagLineWidget extends StatelessWidget {
 }
 
 class _OverviewWidget extends StatelessWidget {
-  const _OverviewWidget({super.key});
+  const _OverviewWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -343,7 +343,7 @@ class _OverviewWidget extends StatelessWidget {
 }
 
 class _PeopleWidget extends StatelessWidget {
-  const _PeopleWidget({super.key});
+  const _PeopleWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -418,7 +418,6 @@ class _PersonCardWidget extends StatelessWidget {
   final String role;
 
   const _PersonCardWidget({
-    super.key,
     required this.name,
     required this.role,
   });
@@ -447,7 +446,6 @@ class _RowOfPersonCardWidget extends StatelessWidget {
   final List<_PersonCardWidget> list;
 
   const _RowOfPersonCardWidget({
-    super.key,
     required this.list,
   });
 
