@@ -9,6 +9,7 @@ class MovieApiClient {
   Future<PopularMovieResponse> popularMovie({
     String language = 'en_US',
     int page = 1,
+    required String apiKey,
   }) async {
     parser(dynamic json) {
       final jsonMap = json as Map<String, dynamic>;
@@ -17,7 +18,7 @@ class MovieApiClient {
     }
 
     final parameters = <String, dynamic>{
-      'api_key': Configuration.apiKey,
+      'api_key': apiKey,
       'language': language,
       'page': page.toString(),
     };
@@ -35,6 +36,7 @@ class MovieApiClient {
     required String query,
     int page = 1,
     bool includeAdult = false,
+    required String apiKey,
   }) async {
     parser(dynamic json) {
       final jsonMap = json as Map<String, dynamic>;
@@ -43,7 +45,7 @@ class MovieApiClient {
     }
 
     final parameters = <String, dynamic>{
-      'api_key': Configuration.apiKey,
+      'api_key': apiKey,
       'language': language,
       'query': query,
       'page': page.toString(),
