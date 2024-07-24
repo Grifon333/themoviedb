@@ -56,7 +56,7 @@ class _FavoriteWidget extends StatelessWidget {
         context.select((MovieDetailsModel model) => model.data.favoriteIcon);
 
     return IconButton(
-      onPressed: () => model.changeFavorite(context),
+      onPressed: () => model.updateFavorite(context),
       icon: Icon(favoriteIcon),
     );
   }

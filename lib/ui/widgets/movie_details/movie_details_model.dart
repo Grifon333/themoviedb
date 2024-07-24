@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:themoviedb/domain/api_client/account_api_client.dart';
 import 'package:themoviedb/domain/api_client/api_client_exception.dart';
 import 'package:themoviedb/domain/api_client/image_downloader.dart';
-import 'package:themoviedb/domain/api_client/movie_api_client.dart';
-import 'package:themoviedb/domain/data_providers/session_data_provider.dart';
 import 'package:themoviedb/domain/entity/movie_details.dart';
 import 'package:themoviedb/domain/repositories/auth_repository.dart';
+import 'package:themoviedb/domain/repositories/movie_repository.dart';
 import 'package:themoviedb/resources/resources.dart';
 import 'package:themoviedb/ui/navigation/main_navigation.dart';
 
@@ -113,11 +111,9 @@ class MovieDetailsData {
 
 class MovieDetailsModel extends ChangeNotifier {
   final BuildContext context;
-  final _movieApiClient = MovieApiClient();
-  final _accountApiClient = AccountApiClient();
-  final _sessionDataProvider = SessionDataProvider();
   final _authRepository = AuthRepository();
-  final MovieDetailsData _data = MovieDetailsData();
+  final _movieRepository = MovieRepository();
+  final _data = MovieDetailsData();
 
   int movieId;
   String _locale = '';
@@ -153,35 +149,44 @@ class MovieDetailsModel extends ChangeNotifier {
   }
 
   Future<void> _loadDetails() async {
-    if (_data.isLoading) return;
-    _data.isLoading = true;
-    notifyListeners();
-    final movieDetails = await _movieApiClient.movieDetails(_locale, movieId);
-    _data.title = movieDetails.title;
-    // TODO: Transfer it to Repository
-    final sessionId = await _sessionDataProvider.getSessionId();
-    if (sessionId != null) {
-      _data._isFavorite =
-          await _accountApiClient.isFavoriteMovie(movieId, sessionId);
+    try {
+      if (_data.isLoading) return;
+      _data.isLoading = true;
+      notifyListeners();
+      final (MovieDetails, bool, String) details =
+          await _movieRepository.loadDetails(
+        _locale,
+        movieId,
+        _countryCode,
+      );
+      _loadData(details);
+      notifyListeners();
+    } on ApiClientException catch (e) {
+      _handleApiClientException(e);
     }
+  }
+
+  void _loadData((MovieDetails, bool, String) details) {
+    MovieDetails movieDetails = details.$1;
+    _data.title = movieDetails.title;
+    _data._isFavorite = details.$2;
     _data.posterData = MovieDetailsPosterData(
       backdropPath: movieDetails.backdropPath,
       posterPath: movieDetails.posterPath,
     );
     _data.year = ' (${movieDetails.releaseDate.year})';
     _loadScareMovieData(movieDetails);
-    await _loadGenreData(movieDetails);
+    _loadGenreData(details);
     _data.tagline = movieDetails.tagline;
     _data.overview = movieDetails.overview ?? '';
     _loadCrew(movieDetails, 2);
     _loadCast(movieDetails);
     _data.isLoading = false;
-    notifyListeners();
   }
 
-  Future<void> _loadGenreData(MovieDetails movieDetails) async {
-    final certification =
-        await _movieApiClient.certification(movieId, _countryCode);
+  void _loadGenreData((MovieDetails, bool, String) details) {
+    MovieDetails movieDetails = details.$1;
+    final certification = details.$3;
     final releaseDate = movieDetails.releaseDate;
     String date = _dateFormat.format(releaseDate);
     final productionCountry = movieDetails.productionCountries[0].iso;
@@ -255,23 +260,11 @@ class MovieDetailsModel extends ChangeNotifier {
         .toList();
   }
 
-  Future<void> changeFavorite(BuildContext context) async {
-    // TODO: Transfer it to Repository
-    final accountId = await _sessionDataProvider.getAccountId();
-    final sessionId = await _sessionDataProvider.getSessionId();
-
+  Future<void> updateFavorite(BuildContext context) async {
     data._isFavorite ^= true;
     notifyListeners();
-    if (accountId == null || sessionId == null) return;
-
     try {
-      await _accountApiClient.markAsFavorite(
-        sessionId,
-        accountId,
-        MediaType.movie,
-        movieId,
-        data._isFavorite,
-      );
+      await _movieRepository.updateFavorite(movieId, data._isFavorite);
     } on ApiClientException catch (e) {
       _handleApiClientException(e);
     }
