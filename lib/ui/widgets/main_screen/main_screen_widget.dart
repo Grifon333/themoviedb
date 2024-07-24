@@ -28,7 +28,7 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () => SessionDataProvider().setSessionId(null),
+            onPressed: () => SessionDataProvider().deleteSessionId(),
             icon: const Icon(Icons.search),
           ),
           const Padding(padding: EdgeInsets.only(right: 10))

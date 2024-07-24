@@ -1,8 +1,8 @@
+import 'dart:math' show min;
+
 import 'package:flutter/material.dart';
-import 'package:themoviedb/Library/Widgets/Inherited/provider.dart';
+import 'package:provider/provider.dart';
 import 'package:themoviedb/Theme/app_colors.dart';
-import 'package:themoviedb/domain/api_client/image_downloader.dart';
-import 'package:themoviedb/resources/resources.dart';
 import 'package:themoviedb/ui/widgets/movie_details/movie_details_model.dart';
 
 class MovieDetailsScreenCastWidget extends StatelessWidget {
@@ -10,31 +10,8 @@ class MovieDetailsScreenCastWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.watch<MovieDetailsModel>(context);
-    final cast = model?.movieDetails?.credits.cast;
-    if (cast == null) return const SizedBox.shrink();
-
-    List<_PersonInfo> people = [];
-    people = cast.map((e) {
-      final profilePath = e.profilePath != null
-          ? Image.network(
-              ImageDownloader.makeImage(e.profilePath ?? ''),
-              width: 120,
-              height: 133,
-              fit: BoxFit.fitWidth,
-              alignment: Alignment.center,
-            )
-          : const Image(
-              image: AssetImage(AppImages.userGrey),
-              height: 133,
-              width: 120,
-            );
-      return _PersonInfo(
-        image: profilePath,
-        name: e.name,
-        role: e.character,
-      );
-    }).toList();
+    final people =
+        context.select((MovieDetailsModel model) => model.data.castDataList);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,7 +34,7 @@ class MovieDetailsScreenCastWidget extends StatelessWidget {
             radius: const Radius.circular(4),
             child: ListView.builder(
               padding: const EdgeInsets.only(left: 14),
-              itemCount: people.length > 9 ? 9 : people.length,
+              itemCount: min(people.length, 9),
               itemExtent: 136,
               scrollDirection: Axis.horizontal,
               itemBuilder: (BuildContext context, int index) {
@@ -77,7 +54,7 @@ class MovieDetailsScreenCastWidget extends StatelessWidget {
 }
 
 class _PersonCardWidget extends StatelessWidget {
-  final _PersonInfo person;
+  final MovieDetailsCastData person;
 
   const _PersonCardWidget({
     required this.person,
@@ -106,7 +83,7 @@ class _PersonCardWidget extends StatelessWidget {
                         fontSize: 16, fontWeight: FontWeight.w700),
                   ),
                   Text(
-                    person.role,
+                    person.character,
                   ),
                 ],
               ),
@@ -116,16 +93,4 @@ class _PersonCardWidget extends StatelessWidget {
       ),
     );
   }
-}
-
-class _PersonInfo {
-  final Image image;
-  final String name;
-  final String role;
-
-  _PersonInfo({
-    required this.image,
-    required this.name,
-    required this.role,
-  });
 }

@@ -93,7 +93,7 @@ abstract class AppTextStyle {
     fontWeight: FontWeight.w700,
     color: Colors.white,
   );
-  static const personCardRole = TextStyle(color: Colors.white);
+  static const personCardJob = TextStyle(color: Colors.white);
   static const score = TextStyle(
     color: Colors.white,
     fontSize: 16,

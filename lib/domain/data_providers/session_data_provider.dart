@@ -11,12 +11,12 @@ class SessionDataProvider {
   Future<String?> getSessionId() async =>
       _secureStorage.read(key: _Keys.sessionId);
 
-  Future<void> setSessionId(String? value) async {
-    if (value != null) {
-      _secureStorage.write(key: _Keys.sessionId, value: value);
-    } else {
-      _secureStorage.delete(key: _Keys.sessionId);
-    }
+  Future<void> setSessionId(String value) async {
+    _secureStorage.write(key: _Keys.sessionId, value: value);
+  }
+
+  Future<void> deleteSessionId() async {
+    _secureStorage.delete(key: _Keys.sessionId);
   }
 
   Future<int?> getAccountId() async {
@@ -24,11 +24,11 @@ class SessionDataProvider {
     return id != null ? int.tryParse(id) : null;
   }
 
-  Future<void> setAccountId(int? value) async {
-    if (value != null) {
-      _secureStorage.write(key: _Keys.accountId, value: value.toString());
-    } else {
-      _secureStorage.delete(key: _Keys.accountId);
-    }
+  Future<void> setAccountId(int value) async {
+    _secureStorage.write(key: _Keys.accountId, value: value.toString());
+  }
+
+  Future<void> deleteAccountId() async {
+    _secureStorage.delete(key: _Keys.accountId);
   }
 }

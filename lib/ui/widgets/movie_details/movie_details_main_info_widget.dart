@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:themoviedb/Library/Widgets/Inherited/provider.dart';
+import 'package:provider/provider.dart';
 import 'package:themoviedb/Theme/app_colors.dart';
 import 'package:themoviedb/Theme/app_text_style.dart';
 import 'package:themoviedb/domain/api_client/image_downloader.dart';
-import 'package:themoviedb/domain/entity/movie_details_credits.dart';
 import 'package:themoviedb/ui/widgets/elements/radial_percent_widget.dart';
 import 'package:themoviedb/ui/widgets/movie_details/movie_details_model.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -50,31 +49,31 @@ class _TopPosterWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.watch<MovieDetailsModel>(context);
-    final backdropPath = model?.movieDetails?.backdropPath;
-    final posterPath = model?.movieDetails?.posterPath;
+    final posterData =
+        context.select((MovieDetailsModel model) => model.data.posterData);
+    final backdropPath = posterData.backdropPath;
+    final posterPath = posterData.posterPath;
+    if (backdropPath == null || posterPath == null) {
+      return const SizedBox.shrink();
+    }
 
     return AspectRatio(
       aspectRatio: 392.7 / 220.7,
       child: Stack(
         children: [
-          backdropPath != null
-              ? Image.network(
-                  ImageDownloader.makeImage(backdropPath),
-                  fit: BoxFit.fitWidth,
-                )
-              : const SizedBox.shrink(),
+          Image.network(
+            ImageDownloader.makeImage(backdropPath),
+            fit: BoxFit.fitWidth,
+          ),
           Positioned(
             top: 20,
             bottom: 20,
             left: 20,
             child: ClipRRect(
               borderRadius: const BorderRadius.all(Radius.circular(6)),
-              child: posterPath != null
-                  ? Image.network(
-                      ImageDownloader.makeImage(posterPath),
-                    )
-                  : const SizedBox.shrink(),
+              child: Image.network(
+                ImageDownloader.makeImage(posterPath),
+              ),
             ),
           ),
         ],
@@ -88,18 +87,16 @@ class _TitleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.watch<MovieDetailsModel>(context);
-    var year = model?.movieDetails?.releaseDate.year.toString();
-    if (year != null) {
-      year = ' ($year)';
-    }
+    final data = context.select((MovieDetailsModel model) => model.data);
+    final year = data.year;
+    final title = data.title;
 
     return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(
         children: [
           TextSpan(
-            text: model?.movieDetails?.title,
+            text: title,
             style: AppTextStyle.titleMovie,
           ),
           TextSpan(
@@ -159,22 +156,11 @@ class _SecondHeaderWidgetState extends State<_SecondHeaderWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.watch<MovieDetailsModel>(context);
-    if (model == null) return const SizedBox.shrink();
-    final scale = model.movieDetails?.voteAverage ?? 0;
-    final videos = model.movieDetails?.videos;
-    if (videos == null) return const SizedBox.shrink();
-
-    String? youtubeKey;
-    if (videos.results.isNotEmpty) {
-      final list = videos.results.where((video) =>
-          video.site == 'YouTube' &&
-          video.type == 'Trailer' &&
-          video.official == true);
-      if (list.isNotEmpty) {
-        youtubeKey = list.first.key;
-      }
-    }
+    final scoreMovieData =
+        context.select((MovieDetailsModel model) => model.data.scoreMovieData);
+    final score = scoreMovieData.score;
+    final scoreStr = scoreMovieData.scoreStr;
+    final youtubeKey = scoreMovieData.youtubeKey;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -182,9 +168,9 @@ class _SecondHeaderWidgetState extends State<_SecondHeaderWidget> {
         Row(
           children: [
             RadialPercentWidget(
-              score: scale / 10,
+              score: score,
               child: Text(
-                (scale * 10).toStringAsFixed(0),
+                scoreStr,
                 style: AppTextStyle.score,
               ),
             ),
@@ -231,27 +217,13 @@ class _GenreWrapperWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.watch<MovieDetailsModel>(context);
-    final releaseDate = model?.movieDetails?.releaseDate;
-    final certification = model?.certification ?? '';
-    String date = '';
-    if (releaseDate != null) {
-      date = model?.stringFromDate(releaseDate) ?? ' ';
-    }
-    final productionCountry =
-        model?.movieDetails?.productionCountries[0].iso ?? '';
-    final runtime = model?.movieDetails?.runtime ?? 0;
-    var hours = (runtime ~/ 60).toString();
-    if (hours != '0') {
-      hours = '$hours h';
-    }
-    final minutes = '${(runtime % 60).toStringAsFixed(0)} m';
-    final time = '$hours $minutes';
-    final genres = model?.movieDetails?.genres
-            .map<String>((e) => e.name)
-            .toList()
-            .join(', ') ??
-        '';
+    final genresData =
+        context.select((MovieDetailsModel model) => model.data.genreData);
+    final certification = genresData.certification;
+    final date = genresData.date;
+    final productionCountry = genresData.productionCountry;
+    final runtime = genresData.runtime;
+    final genres = genresData.genres;
 
     const divider = Divider(
       height: 0,
@@ -279,7 +251,7 @@ class _GenreWrapperWidget extends StatelessWidget {
                           : AppTextStyle.facts,
                     ),
                     TextSpan(
-                      text: '  $date ($productionCountry) • $time \n$genres',
+                      text: '  $date ($productionCountry) • $runtime \n$genres',
                       style: AppTextStyle.facts,
                     ),
                   ],
@@ -299,8 +271,8 @@ class _TagLineWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.read<MovieDetailsModel>(context);
-    final tagLine = model?.movieDetails?.tagline;
+    final tagLine =
+        context.select((MovieDetailsModel model) => model.data.tagline);
     if (tagLine == null) return const SizedBox.shrink();
 
     return Text(
@@ -319,8 +291,8 @@ class _OverviewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.watch<MovieDetailsModel>(context);
-    final overview = model?.movieDetails?.overview ?? '';
+    final overview =
+        context.select((MovieDetailsModel model) => model.data.overview);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -347,79 +319,42 @@ class _PeopleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.watch<MovieDetailsModel>(context);
-    final crew = model?.movieDetails?.credits.crew;
-    if (crew == null || crew.isEmpty) return const SizedBox.shrink();
-    List<_RowOfPersonCardWidget> listCrew = _getListCrew(crew);
+    final crewDataMatrix =
+        context.select((MovieDetailsModel model) => model.data.crewDatMatrix);
+    if (crewDataMatrix.isEmpty) return const SizedBox.shrink();
+    List<_RowOfPersonCardWidget> listCrew = crewDataMatrix
+        .map((row) => _RowOfPersonCardWidget(
+            row.map((el) => _PersonCardWidget(data: el)).toList()))
+        .toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: listCrew,
     );
   }
+}
 
-  List<_RowOfPersonCardWidget> _getListCrew(List<Crew> crew) {
-    List<_PersonCardWidget> list = _getMainCrew(crew);
+class _RowOfPersonCardWidget extends StatelessWidget {
+  final List<_PersonCardWidget> list;
 
-    var rowCards = <_RowOfPersonCardWidget>[];
-    int chunkSize = 2;
-    for (int i = 0; i < list.length; i += chunkSize) {
-      rowCards.add(_RowOfPersonCardWidget(
-          list: list.sublist(
-              i, i + chunkSize > list.length ? list.length : i + chunkSize)));
-    }
-    return rowCards;
-  }
+  const _RowOfPersonCardWidget(this.list);
 
-  List<_PersonCardWidget> _getMainCrew(List<Crew> crew) {
-    Map<int, _PersonCardWidget> mapMainCrew = {};
-    for (var element in crew) {
-      final job = element.job;
-      if (!(job == 'Author' ||
-          job == 'Characters' ||
-          job == 'Director' ||
-          job == 'Novel' ||
-          job == 'Screenplay' ||
-          job == 'Story' ||
-          job == 'Teleplay' ||
-          job == 'Writer')) {
-        continue;
-      }
-
-      if (mapMainCrew.containsKey(element.id)) {
-        mapMainCrew.update(
-            element.id,
-            (value) => _PersonCardWidget(
-                name: value.name, role: '${value.role}, ${element.job}'));
-      } else {
-        mapMainCrew[element.id] =
-            _PersonCardWidget(name: element.name, role: element.job);
-      }
-    }
-
-    var list = mapMainCrew.values.toList();
-    list.sort((a, b) {
-      var compare = a.role.compareTo(b.role);
-      if (compare == 0) {
-        compare = a.name.compareTo(b.name);
-      }
-      return compare;
-    });
-    if (list.length % 2 == 1) {
-      list.add(const _PersonCardWidget(name: '', role: ''));
-    }
-
-    return list;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: Row(
+        children: list,
+      ),
+    );
   }
 }
 
 class _PersonCardWidget extends StatelessWidget {
-  final String name;
-  final String role;
+  final MovieDetailsCrewData data;
 
   const _PersonCardWidget({
-    required this.name,
-    required this.role,
+    required this.data,
   });
 
   @override
@@ -429,32 +364,14 @@ class _PersonCardWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            name,
+            data.name,
             style: AppTextStyle.personCardName,
           ),
           Text(
-            role,
-            style: AppTextStyle.personCardRole,
+            data.job,
+            style: AppTextStyle.personCardJob,
           )
         ],
-      ),
-    );
-  }
-}
-
-class _RowOfPersonCardWidget extends StatelessWidget {
-  final List<_PersonCardWidget> list;
-
-  const _RowOfPersonCardWidget({
-    required this.list,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
-      child: Row(
-        children: list,
       ),
     );
   }
