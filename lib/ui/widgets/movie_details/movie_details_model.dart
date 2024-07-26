@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:themoviedb/Library/localized_model_storage.dart';
 import 'package:themoviedb/domain/api_client/api_client_exception.dart';
 import 'package:themoviedb/domain/api_client/image_downloader.dart';
 import 'package:themoviedb/domain/entity/movie_details.dart';
@@ -113,11 +114,10 @@ class MovieDetailsModel extends ChangeNotifier {
   final BuildContext context;
   final _authRepository = AuthRepository();
   final _movieRepository = MovieRepository();
+  final _localizedModelStorage = LocalizedModelStorage();
   final _data = MovieDetailsData();
 
   int movieId;
-  String _locale = '';
-  String _countryCode = '';
   late DateFormat _dateFormat;
 
   static const Set<String> _mainJobs = {
@@ -138,13 +138,9 @@ class MovieDetailsModel extends ChangeNotifier {
     required this.movieId,
   });
 
-  Future<void> setupLocale(BuildContext context) async {
-    final locale = Localizations.localeOf(context).toLanguageTag();
-    final countryCode = Localizations.localeOf(context).countryCode ?? 'US';
-    if (locale == _locale || countryCode == _countryCode) return;
-    _locale = locale;
-    _countryCode = countryCode;
-    _dateFormat = DateFormat.yMd(locale);
+  Future<void> setupLocale(Locale locale) async {
+    if (!_localizedModelStorage.updateLocate(locale)) return;
+    _dateFormat = DateFormat.yMd(_localizedModelStorage.localeTag);
     await _loadDetails();
   }
 
@@ -155,9 +151,9 @@ class MovieDetailsModel extends ChangeNotifier {
       notifyListeners();
       final (MovieDetails, bool, String) details =
           await _movieRepository.loadDetails(
-        _locale,
+        _localizedModelStorage.localeTag,
         movieId,
-        _countryCode,
+        _localizedModelStorage.countryCode,
       );
       _loadData(details);
       notifyListeners();

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:themoviedb/Library/localized_model_storage.dart';
 import 'package:themoviedb/Library/paginator.dart';
 import 'package:themoviedb/domain/entity/movie.dart';
 import 'package:themoviedb/domain/repositories/movie_repository.dart';
@@ -25,11 +26,11 @@ class MovieListRowData {
 
 class MovieListViewModel extends ChangeNotifier {
   final _movieRepository = MovieRepository();
+  final _localizedModelStorage = LocalizedModelStorage();
   late final Paginator<Movie> _popularMoviePaginator;
   late final Paginator<Movie> _searchMoviePaginator;
   List<MovieListRowData> _movies = <MovieListRowData>[];
   late DateFormat _dateFormat;
-  String _locale = '';
   String? _querySearch;
   Timer? _searchDebounce;
 
@@ -39,7 +40,10 @@ class MovieListViewModel extends ChangeNotifier {
 
   MovieListViewModel() {
     _popularMoviePaginator = Paginator<Movie>((page) async {
-      final result = await _movieRepository.popularMovie(_locale, page);
+      final result = await _movieRepository.popularMovie(
+        _localizedModelStorage.localeTag,
+        page,
+      );
       return PaginatorLoadResult(
         data: result.movies,
         currentPage: result.page,
@@ -49,7 +53,7 @@ class MovieListViewModel extends ChangeNotifier {
     _searchMoviePaginator = Paginator<Movie>((page) async {
       final result = await _movieRepository.searchMovie(
         _querySearch ?? '',
-        _locale,
+        _localizedModelStorage.localeTag,
         page,
       );
       return PaginatorLoadResult(
@@ -60,11 +64,9 @@ class MovieListViewModel extends ChangeNotifier {
     });
   }
 
-  Future<void> setupLocale(BuildContext context) async {
-    final locale = Localizations.localeOf(context).toLanguageTag();
-    if (_locale == locale) return;
-    _locale = locale;
-    _dateFormat = DateFormat.yMMMMd(locale);
+  Future<void> setupLocale(Locale locale) async {
+    if (!_localizedModelStorage.updateLocate(locale)) return;
+    _dateFormat = DateFormat.yMMMMd(_localizedModelStorage.localeTag);
     await _resetList();
   }
 

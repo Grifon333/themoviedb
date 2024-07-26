@@ -16,8 +16,9 @@ class MovieDetailsWidget extends StatefulWidget {
 class _MovieDetailsWidgetState extends State<MovieDetailsWidget> {
   @override
   void didChangeDependencies() {
+    final locale = Localizations.localeOf(context);
     Future.microtask(
-        () => context.read<MovieDetailsModel>().setupLocale(context));
+        () => context.read<MovieDetailsModel>().setupLocale(locale));
     super.didChangeDependencies();
   }
 
