@@ -15,11 +15,12 @@ class LoaderViewModel {
   }
 
   Future<void> _checkAuth() async {
-    final isAuth = await _authRepository.isAuth();
-    if (!context.mounted) return;
+    final authStatus = await _authRepository.status.first;
+    final isAuth = (authStatus == AuthStatus.authenticated);
     final routeName = isAuth
         ? MainNavigationRouteNames.mainScreen
         : MainNavigationRouteNames.authScreen;
+    if (!context.mounted) return;
     Navigator.of(context).pushReplacementNamed(routeName);
   }
 }

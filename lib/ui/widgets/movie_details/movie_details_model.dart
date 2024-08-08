@@ -269,7 +269,7 @@ class MovieDetailsModel extends ChangeNotifier {
   void _handleApiClientException(ApiClientException exception) {
     switch (exception.type) {
       case ApiClientExceptionType.sessionExpired:
-        _authRepository.logout();
+        _authRepository.logOut();
         MainNavigation.goLoader(context);
         break;
       default:

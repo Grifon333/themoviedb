@@ -46,7 +46,7 @@ class AuthViewModel extends ChangeNotifier {
 
   Future<String?> _login(String username, String password) async {
     try {
-      await _authRepository.login(username, password);
+      await _authRepository.logIn(username, password);
       return null;
     } on ApiClientException catch (e) {
       switch (e.type) {
