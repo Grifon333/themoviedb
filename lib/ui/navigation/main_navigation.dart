@@ -3,7 +3,7 @@ import 'package:themoviedb/domain/factories/screen_factory.dart';
 
 abstract class MainNavigationRouteNames {
   static const loaderScreen = '/';
-  static const authScreen = '/auth';
+  static const loginScreen = '/auth';
   static const mainScreen = '/main_screen';
   static const movieDetails = '/main_screen/movie_details';
 }
@@ -14,7 +14,7 @@ class MainNavigation {
   final routes = <String, WidgetBuilder>{
     MainNavigationRouteNames.loaderScreen: (_) =>
         _screenFactory.makeLoaderScreen(),
-    MainNavigationRouteNames.authScreen: (_) => _screenFactory.makeAuthScreen(),
+    MainNavigationRouteNames.loginScreen: (_) => _screenFactory.makeLoginScreen(),
     MainNavigationRouteNames.mainScreen: (_) => _screenFactory.makeMainScreen(),
   };
 

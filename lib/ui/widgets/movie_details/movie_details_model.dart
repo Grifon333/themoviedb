@@ -112,7 +112,7 @@ class MovieDetailsData {
 
 class MovieDetailsModel extends ChangeNotifier {
   final BuildContext context;
-  final _authRepository = AuthRepository();
+  final _authRepository = AuthenticationRepository();
   final _movieRepository = MovieRepository();
   final _localizedModelStorage = LocalizedModelStorage();
   final _data = MovieDetailsData();

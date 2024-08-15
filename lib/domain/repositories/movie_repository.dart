@@ -1,13 +1,13 @@
 import 'package:themoviedb/domain/api_client/account_api_client.dart';
 import 'package:themoviedb/domain/api_client/movie_api_client.dart';
 import 'package:themoviedb/domain/configuration/configuration.dart';
-import 'package:themoviedb/domain/data_providers/session_data_provider.dart';
+import 'package:themoviedb/domain/data_providers/user_data_provider.dart';
 import 'package:themoviedb/domain/entity/movie_details.dart';
 import 'package:themoviedb/domain/entity/popular_movie_response.dart';
 
 class MovieRepository {
   final _movieApiClient = MovieApiClient();
-  final SessionDataProvider _sessionDataProvider = SessionDataProvider();
+  final UserDataProvider _userDataProvider = UserDataProvider();
   final AccountApiClient _accountApiClient = AccountApiClient();
 
   Future<PopularMovieResponse> popularMovie(String locale, int page) async =>
@@ -36,7 +36,7 @@ class MovieRepository {
   ) async {
     final MovieDetails movieDetails =
         await _movieApiClient.movieDetails(locale, movieId);
-    final sessionId = await _sessionDataProvider.getSessionId();
+    final sessionId = (await _userDataProvider.getUser())?.sessionId;
     bool isFavorite = false;
     if (sessionId != null) {
       isFavorite = await _accountApiClient.isFavoriteMovie(movieId, sessionId);
@@ -49,12 +49,11 @@ class MovieRepository {
   }
 
   Future<void> updateFavorite(int movieId, bool isFavorite) async {
-    final accountId = await _sessionDataProvider.getAccountId();
-    final sessionId = await _sessionDataProvider.getSessionId();
-    if (accountId == null || sessionId == null) return;
+    final user = await _userDataProvider.getUser();
+    if (user == null) return;
     await _accountApiClient.markAsFavorite(
-      sessionId,
-      accountId,
+      user.sessionId,
+      user.accountId,
       MediaType.movie,
       movieId,
       isFavorite,

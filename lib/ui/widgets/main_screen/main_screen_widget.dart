@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:themoviedb/domain/data_providers/session_data_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:themoviedb/domain/factories/screen_factory.dart';
+import 'package:themoviedb/ui/widgets/authentication/authentication.dart';
 
 class MainScreenWidget extends StatefulWidget {
   const MainScreenWidget({super.key});
@@ -28,7 +29,9 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () => SessionDataProvider().deleteSessionId(),
+            onPressed: () => context.read<AuthenticationBloc>().add(
+                  AuthenticationLogoutPressedEvent(),
+                ),
             icon: const Icon(Icons.search),
           ),
           const Padding(padding: EdgeInsets.only(right: 10))
