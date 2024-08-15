@@ -2,22 +2,23 @@ import 'dart:async';
 
 import 'package:themoviedb/domain/api_client/account_api_client.dart';
 import 'package:themoviedb/domain/api_client/auth_api_client.dart';
-import 'package:themoviedb/domain/data_providers/session_data_provider.dart';
+import 'package:themoviedb/domain/data_providers/user_data_provider.dart';
+import 'package:themoviedb/domain/entity/user.dart';
 
-enum AuthStatus { unknown, authenticated, unauthenticated }
+enum AuthenticationStatus { unknown, authenticated, unauthenticated }
 
-class AuthRepository {
-  final _sessionDataProvider = SessionDataProvider();
+class AuthenticationRepository {
+  final _userDataProvider = UserDataProvider();
   final _authApiClient = AuthApiClient();
   final _accountApiClient = AccountApiClient();
-  final _controller = StreamController<AuthStatus>();
+  final _controller = StreamController<AuthenticationStatus>();
 
-  Stream<AuthStatus> get status async* {
-    await Future.delayed(const Duration(seconds: 1));
-    final sessionId = await _sessionDataProvider.getSessionId();
+  Stream<AuthenticationStatus> get status async* {
+    final user = await _userDataProvider.getUser();
+    final sessionId = user?.sessionId;
     yield sessionId == null
-        ? AuthStatus.unauthenticated
-        : AuthStatus.authenticated;
+        ? AuthenticationStatus.unauthenticated
+        : AuthenticationStatus.authenticated;
     yield* _controller.stream;
   }
 
@@ -27,15 +28,16 @@ class AuthRepository {
       password: password,
     );
     final accountId = await _accountApiClient.getAccountId(sessionId);
-    await _sessionDataProvider.setSessionId(sessionId);
-    await _sessionDataProvider.setAccountId(accountId);
-    _controller.add(AuthStatus.authenticated);
+    await _userDataProvider.setUser(User(
+      sessionId: sessionId,
+      accountId: accountId,
+    ));
+    _controller.add(AuthenticationStatus.authenticated);
   }
 
   Future<void> logOut() async {
-    await _sessionDataProvider.deleteAccountId();
-    await _sessionDataProvider.deleteSessionId();
-    _controller.add(AuthStatus.unauthenticated);
+    await _userDataProvider.deleteUser();
+    _controller.add(AuthenticationStatus.unauthenticated);
   }
 
   void dispose() => _controller.close();
