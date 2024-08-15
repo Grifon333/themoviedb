@@ -1,12 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:themoviedb/Library/text_form.dart';
 import 'package:themoviedb/Theme/app_colors.dart';
 import 'package:themoviedb/Theme/app_text_style.dart';
-import 'package:themoviedb/ui/widgets/auth/auth_view_model.dart';
+import 'package:themoviedb/ui/widgets/login/bloc/login_bloc.dart';
 
-class AuthWidget extends StatelessWidget {
-  const AuthWidget({super.key});
+class LoginWidget extends StatelessWidget {
+  const LoginWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -107,20 +108,26 @@ class _FormWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<AuthViewModel>();
     const decoration = InputDecoration(
-      enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: AppColors.enableBorder,
-          width: 1.0,
-        ),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: AppColors.focusedBorder,
-          width: 1.0,
-        ),
-      ),
+      border: OutlineInputBorder(),
+      // enabledBorder: OutlineInputBorder(
+      //   borderSide: BorderSide(
+      //     color: AppColors.enableBorder,
+      //     width: 1.0,
+      //   ),
+      // ),
+      // focusedBorder: OutlineInputBorder(
+      //   borderSide: BorderSide(
+      //     color: AppColors.focusedBorder,
+      //     width: 1.0,
+      //   ),
+      // ),
+      // errorBorder: OutlineInputBorder(
+      //   borderSide: BorderSide(
+      //     color: AppColors.error,
+      //     width: 1.0,
+      //   ),
+      // ),
       isCollapsed: true,
       contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
     );
@@ -130,28 +137,13 @@ class _FormWidget extends StatelessWidget {
       children: [
         const _ShowErrorWidget(),
         const SizedBox(height: 16),
-        const Text(
-          'Username',
-          style: AppTextStyle.titleOfTextField,
-        ),
-        TextField(
-          decoration: decoration,
-          onChanged: model.onChangeUsername,
-        ),
+        const _UsernameWidget(decoration: decoration),
         const SizedBox(height: 16),
-        const Text(
-          'Password',
-          style: AppTextStyle.titleOfTextField,
-        ),
-        TextField(
-          decoration: decoration,
-          onChanged: model.onChangePassword,
-          obscureText: true,
-        ),
+        const _PasswordWidget(decoration: decoration),
         const SizedBox(height: 30),
         Row(
           children: [
-            const _AuthButtonWidget(),
+            const _LoginButtonWidget(),
             const SizedBox(width: 30),
             TextButton(
               onPressed: () {},
@@ -167,19 +159,86 @@ class _FormWidget extends StatelessWidget {
   }
 }
 
-class _AuthButtonWidget extends StatelessWidget {
-  const _AuthButtonWidget();
+class _UsernameWidget extends StatelessWidget {
+  final InputDecoration decoration;
+
+  const _UsernameWidget({required this.decoration});
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<AuthViewModel>();
-    final canStartAuth =
-        context.select((AuthViewModel vm) => !vm.state.isAuthProgress);
+    final model = context.read<LoginBloc>();
+    final displayError = context.select(
+              (LoginBloc bloc) => bloc.state.username.displayError,
+            ) !=
+            null
+        ? 'invalid username'
+        : null;
 
-    final backgroundColor = MaterialStatePropertyAll(
-      canStartAuth ? AppColors.lightBlue : Colors.grey,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Username',
+          style: AppTextStyle.titleOfTextField,
+        ),
+        TextField(
+          decoration: decoration.copyWith(errorText: displayError),
+          onChanged: (username) => model.add(
+            LoginUsernameChangedEvent(username),
+          ),
+        ),
+      ],
     );
-    final onPressed = canStartAuth ? () => model.auth() : null;
+  }
+}
+
+class _PasswordWidget extends StatelessWidget {
+  final InputDecoration decoration;
+
+  const _PasswordWidget({required this.decoration});
+
+  @override
+  Widget build(BuildContext context) {
+    final model = context.read<LoginBloc>();
+    final displayError = context.select(
+              (LoginBloc bloc) => bloc.state.password.displayError,
+            ) !=
+            null
+        ? 'invalid password'
+        : null;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Password',
+          style: AppTextStyle.titleOfTextField,
+        ),
+        TextField(
+          decoration: decoration.copyWith(errorText: displayError),
+          onChanged: (password) => model.add(
+            LoginPasswordChangedEvent(password),
+          ),
+          obscureText: true,
+        ),
+      ],
+    );
+  }
+}
+
+class _LoginButtonWidget extends StatelessWidget {
+  const _LoginButtonWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    final isProgress = context.select(
+      (LoginBloc bloc) => bloc.state.status.isInProgress,
+    );
+    if (isProgress) return const CircularProgressIndicator();
+    final isValid = context.select((LoginBloc bloc) => bloc.state.isValid);
+    final model = context.read<LoginBloc>();
+    final onPressed =
+        isValid ? () => model.add(const LoginSubmittedEvent()) : null;
 
     return ElevatedButton(
       onPressed: onPressed,
@@ -190,7 +249,7 @@ class _AuthButtonWidget extends StatelessWidget {
             vertical: 6,
           ),
         ),
-        backgroundColor: backgroundColor,
+        backgroundColor: MaterialStateProperty.all(AppColors.lightBlue),
       ),
       child: const Text(
         'Login',
@@ -205,8 +264,7 @@ class _ShowErrorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final errorMessage =
-        context.select((AuthViewModel vm) => vm.state.errorMessage);
+    final errorMessage = context.select((LoginBloc bloc) => bloc.state.error);
     if (errorMessage == null) return const SizedBox.shrink();
 
     return Column(
