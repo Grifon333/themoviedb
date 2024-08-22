@@ -21,7 +21,7 @@ class MovieDetails {
   String? posterPath;
   List<ProductionCompany> productionCompanies;
   List<ProductionCountry> productionCountries;
-  DateTime releaseDate;
+  DateTime? releaseDate;
   int revenue;
   int? runtime;
   List<SpokenLanguage> spokenLanguages;

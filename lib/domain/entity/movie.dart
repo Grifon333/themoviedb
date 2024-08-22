@@ -7,7 +7,7 @@ class Movie {
   final String? posterPath;
   final bool adult;
   final String overview;
-  final DateTime releaseDate;
+  final DateTime? releaseDate;
   final List<int> genreIds;
   final int id;
   final String originalTitle;

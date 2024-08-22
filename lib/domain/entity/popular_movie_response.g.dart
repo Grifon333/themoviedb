@@ -9,12 +9,12 @@ part of 'popular_movie_response.dart';
 PopularMovieResponse _$PopularMovieResponseFromJson(
         Map<String, dynamic> json) =>
     PopularMovieResponse(
-      page: json['page'] as int,
+      page: (json['page'] as num).toInt(),
       movies: (json['results'] as List<dynamic>)
           .map((e) => Movie.fromJson(e as Map<String, dynamic>))
           .toList(),
-      totalResults: json['total_results'] as int,
-      totalPages: json['total_pages'] as int,
+      totalResults: (json['total_results'] as num).toInt(),
+      totalPages: (json['total_pages'] as num).toInt(),
     );
 
 Map<String, dynamic> _$PopularMovieResponseToJson(

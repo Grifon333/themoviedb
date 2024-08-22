@@ -24,7 +24,7 @@ Results _$ResultsFromJson(Map<String, dynamic> json) => Results(
       name: json['name'] as String,
       key: json['key'] as String,
       site: json['site'] as String,
-      size: json['size'] as int,
+      size: (json['size'] as num).toInt(),
       type: json['type'] as String,
       official: json['official'] as bool,
       publishedAt: json['published_at'] as String,

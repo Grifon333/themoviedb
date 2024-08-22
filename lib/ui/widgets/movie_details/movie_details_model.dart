@@ -170,7 +170,9 @@ class MovieDetailsModel extends ChangeNotifier {
       backdropPath: movieDetails.backdropPath,
       posterPath: movieDetails.posterPath,
     );
-    _data.year = ' (${movieDetails.releaseDate.year})';
+    _data.year = movieDetails.releaseDate != null
+        ? ' (${movieDetails.releaseDate!.year})'
+        : '';
     _loadScareMovieData(movieDetails);
     _loadGenreData(details);
     _data.tagline = movieDetails.tagline;
@@ -184,15 +186,17 @@ class MovieDetailsModel extends ChangeNotifier {
     MovieDetails movieDetails = details.$1;
     final certification = details.$3;
     final releaseDate = movieDetails.releaseDate;
-    String date = _dateFormat.format(releaseDate);
-    final productionCountry = movieDetails.productionCountries[0].iso;
+    String date = releaseDate != null ? _dateFormat.format(releaseDate) : '';
+    final productionCountry = movieDetails.productionCountries.isNotEmpty
+        ? movieDetails.productionCountries[0].iso
+        : '';
     final timeInMinutes = movieDetails.runtime ?? 0;
     var hours = (timeInMinutes ~/ 60).toString();
     if (hours != '0') {
       hours = '$hours h';
     }
     final minutes = '${(timeInMinutes % 60).toStringAsFixed(0)} m';
-    final runtime = '$hours $minutes';
+    final runtime = '${hours != '0' ? '$hours ' : ''}$minutes';
     final genres =
         movieDetails.genres.map<String>((e) => e.name).toList().join(', ');
     _data.genreData = MovieDetailsGenreData(
