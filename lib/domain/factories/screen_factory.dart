@@ -11,8 +11,7 @@ import 'package:themoviedb/ui/widgets/login/login.dart';
 import 'package:themoviedb/ui/widgets/main_screen/main_screen_widget.dart';
 import 'package:themoviedb/ui/widgets/movie_details/movie_details_model.dart';
 import 'package:themoviedb/ui/widgets/movie_details/movie_details_widget.dart';
-import 'package:themoviedb/ui/widgets/movie_list/bloc/movie_list_bloc.dart';
-import 'package:themoviedb/ui/widgets/movie_list/movie_list_widget.dart';
+import 'package:themoviedb/ui/widgets/movie_list/movie_list.dart';
 
 class ScreenFactory {
   final AuthenticationRepository _authenticationRepository =
