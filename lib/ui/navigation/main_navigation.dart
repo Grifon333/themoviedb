@@ -43,4 +43,11 @@ class MainNavigation {
       (route) => false,
     );
   }
+
+  static void goToMovieDetails(BuildContext context, int id) {
+    Navigator.of(context).pushNamed(
+      MainNavigationRouteNames.movieDetails,
+      arguments: id,
+    );
+  }
 }
