@@ -7,7 +7,6 @@ import 'package:themoviedb/domain/entity/movie_details.dart';
 import 'package:themoviedb/domain/repositories/auth_repository.dart';
 import 'package:themoviedb/domain/repositories/movie_repository.dart';
 import 'package:themoviedb/resources/resources.dart';
-import 'package:themoviedb/ui/navigation/main_navigation.dart';
 
 class MovieDetailsCastData {
   final String? _profilePath;
@@ -274,7 +273,6 @@ class MovieDetailsModel extends ChangeNotifier {
     switch (exception.type) {
       case ApiClientExceptionType.sessionExpired:
         _authRepository.logOut();
-        MainNavigation.goLoader(context);
         break;
       default:
         debugPrint(exception.toString());
