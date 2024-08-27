@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class _Keys {
@@ -10,12 +8,17 @@ class _Keys {
 class LocaleDataProvider {
   final Future<SharedPreferences> _storage = SharedPreferences.getInstance();
 
-  Future<void> setLocale(Locale locale) async {
-    final storage = await _storage;
-    final localeTag = locale.toLanguageTag();
-    final countryCode = locale.countryCode ?? 'US';
-    storage.setString(_Keys.localeTag, localeTag);
-    storage.setString(_Keys.countryCode, countryCode);
+  Future<void> setLocaleTag(String localeTag) async {
+    (await _storage).setString(_Keys.localeTag, localeTag);
+  }
+
+  Future<void> setCountryCode(String countryCode) async {
+    (await _storage).setString(_Keys.countryCode, countryCode);
+  }
+
+  Future<void> deleteLocale() async {
+    (await _storage).remove('locale_tag');
+    (await _storage).remove('country_code');
   }
 
   Future<String> get localeTag async {
