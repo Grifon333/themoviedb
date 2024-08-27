@@ -10,11 +10,19 @@ abstract class MainNavigationRouteNames {
 
 class MainNavigation {
   static final _screenFactory = ScreenFactory();
+  final GlobalKey<NavigatorState> _navigatorKey;
+
+  NavigatorState get _navigator => _navigatorKey.currentState!;
+
+  MainNavigation({
+    required GlobalKey<NavigatorState> navigatorKey,
+  }) : _navigatorKey = navigatorKey;
 
   final routes = <String, WidgetBuilder>{
-    MainNavigationRouteNames.loaderScreen: (_) =>
-        _screenFactory.makeLoaderScreen(),
-    MainNavigationRouteNames.loginScreen: (_) => _screenFactory.makeLoginScreen(),
+    MainNavigationRouteNames.loaderScreen: (context) =>
+        _screenFactory.makeLoaderScreen(context),
+    MainNavigationRouteNames.loginScreen: (context) =>
+        _screenFactory.makeLoginScreen(context),
     MainNavigationRouteNames.mainScreen: (_) => _screenFactory.makeMainScreen(),
   };
 
@@ -24,30 +32,33 @@ class MainNavigation {
         final arguments = settings.arguments;
         final movieId = arguments is int ? arguments : 0;
         return MaterialPageRoute(
-          builder: (context) => _screenFactory.makeMovieDetailsScreen(movieId),
+          builder: (_) => _screenFactory.makeMovieDetailsScreen(movieId),
         );
       default:
         return MaterialPageRoute(
-          builder: (context) => const Scaffold(
-            body: Center(
-              child: Text('Navigation error'),
-            ),
-          ),
+          builder: (context) => _screenFactory.makeLoaderScreen(context),
         );
     }
-  }
-
-  static void goLoader(BuildContext context) {
-    Navigator.of(context).pushNamedAndRemoveUntil(
-      MainNavigationRouteNames.loaderScreen,
-      (route) => false,
-    );
   }
 
   static void goToMovieDetails(BuildContext context, int id) {
     Navigator.of(context).pushNamed(
       MainNavigationRouteNames.movieDetails,
       arguments: id,
+    );
+  }
+
+  void goToLogin(BuildContext context) {
+    _navigator.pushNamedAndRemoveUntil(
+      MainNavigationRouteNames.loginScreen,
+      (route) => false,
+    );
+  }
+
+  void goToMainScreen(BuildContext context) {
+    _navigator.pushNamedAndRemoveUntil(
+      MainNavigationRouteNames.mainScreen,
+      (route) => false,
     );
   }
 }
